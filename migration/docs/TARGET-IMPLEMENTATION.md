@@ -92,10 +92,16 @@ JSON (tested).
 ## Databricks write/retry (prepared, not run)
 
 `target/databricks/job_entry.py` reuses `validate_inputs` + `compute`.
-Transactions append first (a `DELETE ... WHERE run_id = '<run_id>'` makes
-re-runs idempotent), then the accounts snapshot is overwritten. A failure
-between the two publishes nothing further; retry = same `run_id`. No atomic
-cross-table commit is claimed. See `target/databricks/README.md`.
+Transactions write first as a single atomic Delta commit — `mode("overwrite")`
++ `option("replaceWhere", "run_id = '<run_id>'")` replaces only this run's
+rows in one transaction (a failed retry leaves prior rows intact, and
+`saveAsTable` creates the table when absent; replaceWhere-on-create needs
+workspace confirmation). The accounts snapshot is then fully overwritten. A
+failure between the two publishes nothing further; retry = same `run_id`. No
+atomic cross-table commit is claimed. Separately, a Spark startup failure in
+the local CLI still writes the error payload (exit 4,
+`UNCLASSIFIED_TARGET_ERROR`) — the session is created inside the guarded
+block. See `target/databricks/README.md`.
 
 ## Limits
 

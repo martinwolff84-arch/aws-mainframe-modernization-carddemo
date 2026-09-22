@@ -585,3 +585,87 @@ def test_widgets_and_main_param_resolution(monkeypatch, spark):
     # SparkSession.builder.getOrCreate() reuses the fixture's session.
     result = job_entry.main()
     assert result == {"from": "cli"}
+
+
+# --- review round 2: startup failure, atomic writes, string fields -----------
+
+def test_spark_startup_failure_still_writes_error_payload(tmp_path, monkeypatch):
+    """build_spark runs inside the guarded block: a startup failure must still
+    produce the classified error JSON (exit 4), not a bare crash."""
+    from target import run_job
+    monkeypatch.setattr(run_job, "build_spark",
+                        lambda *a, **k: (_ for _ in ()).throw(
+                            RuntimeError("no JVM")))
+    out = tmp_path / "out.json"
+    code = run_job.main(["--case", "baseline",
+                         "--fixtures", str(ROOT / "fixtures/cases.json"),
+                         "--output", str(out)])
+    assert code == 4
+    payload = json.loads(out.read_text())
+    assert payload["status"] == "error"
+    assert payload["error_kind"] == "UNCLASSIFIED_TARGET_ERROR"
+    assert payload["accounts"] is None and payload["transactions"] is None
+
+
+def test_write_outputs_single_atomic_replacewhere_commit(spark):
+    """The transactions write is one Delta overwrite + replaceWhere commit —
+    no separate DELETE statement exists to fail or erase a prior run."""
+    from unittest.mock import MagicMock
+
+    from target.databricks import job_entry
+
+    writer = MagicMock(name="tx_writer")
+    tx_df = MagicMock(name="transactions_out")
+    tx_df.withColumn.return_value = tx_df
+    tx_df.write = writer
+    writer.format.return_value = writer
+    writer.mode.return_value = writer
+    writer.option.return_value = writer
+
+    accounts_writer = MagicMock(name="accounts_writer")
+    accounts_df = MagicMock(name="accounts_out")
+    accounts_df.write = accounts_writer
+    accounts_writer.format.return_value = accounts_writer
+    accounts_writer.mode.return_value = accounts_writer
+
+    tables = {name: f"`t_{name}`" for name in job_entry.TABLE_PARAMS}
+    job_entry.write_outputs(tx_df, accounts_df, tables, _job_params())
+
+    writer.format.assert_called_once_with("delta")
+    writer.mode.assert_called_once_with("overwrite")
+    writer.option.assert_called_once_with("replaceWhere", "run_id = 'r1'")
+    writer.saveAsTable.assert_called_once_with(tables["transactions_out_table"])
+    accounts_writer.mode.assert_called_once_with("overwrite")
+    accounts_writer.saveAsTable.assert_called_once_with(
+        tables["accounts_out_table"])
+    # two withColumn calls (run_id, batch_date); the writer never issues SQL —
+    # write_outputs takes no spark, so no DELETE statement exists at all.
+    assert tx_df.withColumn.call_count == 2
+    writer.sql.assert_not_called()
+
+
+def test_null_active_via_nullable_dataframe_rejected(spark):
+    frames = frames_from_case(spark, load_case("baseline"))
+    schema = T.StructType(
+        [f if f.name != "active" else T.StructField("active", T.StringType(), True)
+         for f in frames["accounts"].schema.fields])
+    row = next(iter(frames["accounts"].limit(1).collect())).asDict()
+    row["active"] = None
+    frames["accounts"] = spark.createDataFrame(
+        [tuple(row[f.name] for f in schema.fields)], schema)
+    with pytest.raises(InputValidationError) as exc:
+        validate_inputs(frames)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+@pytest.mark.parametrize("field,value", [
+    ("zip", None),
+    ("open_date", "bad"),
+    ("active", None),
+])
+def test_null_or_bad_account_string_fields_rejected(spark, field, value):
+    case = load_case("baseline")
+    case["accounts"][0][field] = value
+    with pytest.raises(InputValidationError) as exc:
+        run_case(spark, case)
+    assert exc.value.kind == "MALFORMED_INPUT"

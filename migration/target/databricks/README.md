@@ -34,18 +34,23 @@ must choose and supply:
 ## Write and retry behaviour
 
 1. **Transactions first**: `run_id` is validated against
-   `^[A-Za-z0-9_.-]{1,64}$` (`InputValidationError`/`MALFORMED_INPUT`) before
-   it is interpolated into SQL. Rows for the same `run_id` are deleted
-   (`DELETE FROM <transactions_out_table> WHERE run_id = '<run_id>'`), then
-   this run's transactions are appended with `run_id` and `batch_date`
-   columns via `df.write.format("delta").mode("append").saveAsTable(...)`.
-   Re-running the same `run_id` is therefore idempotent for the append.
+   `^[A-Za-z0-9_.-]{1,64}$` and every table name against
+   `^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+){0,2}$` (`InputValidationError`/
+   `MALFORMED_INPUT`) before interpolation. The run's transactions are
+   written in **one atomic Delta commit**:
+   `df.write.format("delta").mode("overwrite")
+   .option("replaceWhere", "run_id = '<run_id>'").saveAsTable(...)` —
+   replaceWhere substitutes exactly this run's rows in a single transaction,
+   so the previous run's rows remain intact until the new commit succeeds
+   and a failed retry does not erase them. `saveAsTable` also creates the
+   table when absent; replaceWhere-on-create behaviour must be confirmed in
+   the owner's workspace since nothing here was executed.
 2. **Accounts second**: the accounts output snapshot table is fully
    overwritten (`mode("overwrite")`), which is idempotent by itself.
 3. **Failure between the two writes**: the job raises and publishes nothing
    else. The documented retry is to re-run the job with the **same**
-   `run_id`: the delete removes the earlier partial transaction append, and
-   the accounts overwrite replaces whatever snapshot exists. A cross-table
-   atomic commit is *not* claimed — there is a window where new transactions
-   coexist with an old accounts snapshot; consumers must tolerate that or
-   gate reads on a completed-run marker (owner decision).
+   `run_id` — the atomic replaceWhere makes the transactions write
+   idempotent and the accounts overwrite replaces whatever snapshot exists.
+   A cross-table atomic commit is *not* claimed — there is a window where
+   new transactions coexist with an old accounts snapshot; consumers must
+   tolerate that or gate reads on a completed-run marker (owner decision).

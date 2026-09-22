@@ -167,6 +167,27 @@ def _require(raw, field, record_label):
     return raw[field]
 
 
+_MISSING = object()
+
+
+def _text(raw, field, record_label, default=_MISSING):
+    """Return a string field; JSON null or a missing required key is an error.
+
+    Never coerce None to the string "None" — it would silently pass a width
+    check and corrupt the migrated record.
+    """
+    if field not in raw:
+        if default is _MISSING:
+            raise InputValidationError(
+                "MALFORMED_INPUT", f"{record_label} record is missing {field!r}")
+        return str(default)
+    value = raw[field]
+    if value is None:
+        raise InputValidationError(
+            "MALFORMED_INPUT", f"{record_label}.{field} is null")
+    return str(value)
+
+
 def frames_from_case(spark, case):
     """Build the four input DataFrames from a fixture case dict.
 
@@ -182,42 +203,45 @@ def frames_from_case(spark, case):
     accounts = []
     for raw in case.get("accounts") or []:
         accounts.append({
-            "account_id": _normalize_account_id(_require(raw, "account_id", "accounts")),
-            "group": _normalize_group(_require(raw, "group", "accounts")),
+            "account_id": _normalize_account_id(_text(raw, "account_id", "accounts")),
+            "group": _normalize_group(_text(raw, "group", "accounts")),
             "current_balance": _decimal(_require(raw, "current_balance", "accounts"),
                                         "current_balance", 10),
             "cycle_credit": _decimal(raw.get("cycle_credit", "0"), "cycle_credit", 10),
             "cycle_debit": _decimal(raw.get("cycle_debit", "0"), "cycle_debit", 10),
-            "active": str(raw.get("active", ACCOUNT_DEFAULTS["active"])),
+            "active": _text(raw, "active", "accounts", ACCOUNT_DEFAULTS["active"]),
             "credit_limit": _decimal(raw.get("credit_limit", ACCOUNT_DEFAULTS["credit_limit"]),
                                      "credit_limit", 10),
             "cash_credit_limit": _decimal(
                 raw.get("cash_credit_limit", ACCOUNT_DEFAULTS["cash_credit_limit"]),
                 "cash_credit_limit", 10),
-            "open_date": str(raw.get("open_date", ACCOUNT_DEFAULTS["open_date"])),
-            "expiration_date": str(raw.get("expiration_date", ACCOUNT_DEFAULTS["expiration_date"])),
-            "reissue_date": str(raw.get("reissue_date", ACCOUNT_DEFAULTS["reissue_date"])),
-            "zip": str(raw.get("zip", ACCOUNT_DEFAULTS["zip"])),
+            "open_date": _text(raw, "open_date", "accounts",
+                               ACCOUNT_DEFAULTS["open_date"]),
+            "expiration_date": _text(raw, "expiration_date", "accounts",
+                                     ACCOUNT_DEFAULTS["expiration_date"]),
+            "reissue_date": _text(raw, "reissue_date", "accounts",
+                                  ACCOUNT_DEFAULTS["reissue_date"]),
+            "zip": _text(raw, "zip", "accounts", ACCOUNT_DEFAULTS["zip"]),
         })
 
     xrefs = []
     for raw in case.get("xrefs") or []:
-        card_number = str(_require(raw, "card_number", "xrefs"))
+        card_number = _text(raw, "card_number", "xrefs")
         if len(card_number) != 16:
             raise InputValidationError("MALFORMED_INPUT",
                                        f"card_number is not exactly 16 characters: {card_number!r}")
         xrefs.append({
             "card_number": card_number,
-            "customer_id": _normalize_customer_id(_require(raw, "customer_id", "xrefs")),
-            "account_id": _normalize_account_id(_require(raw, "account_id", "xrefs")),
+            "customer_id": _normalize_customer_id(_text(raw, "customer_id", "xrefs")),
+            "account_id": _normalize_account_id(_text(raw, "account_id", "xrefs")),
         })
 
     categories = []
     for raw in case.get("categories") or []:
         categories.append({
-            "account_id": _normalize_account_id(_require(raw, "account_id", "categories")),
-            "type": _normalize_type(_require(raw, "type", "categories")),
-            "category": _normalize_category(_require(raw, "category", "categories")),
+            "account_id": _normalize_account_id(_text(raw, "account_id", "categories")),
+            "type": _normalize_type(_text(raw, "type", "categories")),
+            "category": _normalize_category(_text(raw, "category", "categories")),
             "balance": _decimal(_require(raw, "balance", "categories"),
                                 "category balance", 9),
         })
@@ -225,9 +249,9 @@ def frames_from_case(spark, case):
     rates = []
     for raw in case.get("rates") or []:
         rates.append({
-            "group": _normalize_group(_require(raw, "group", "rates")),
-            "type": _normalize_type(_require(raw, "type", "rates")),
-            "category": _normalize_category(_require(raw, "category", "rates")),
+            "group": _normalize_group(_text(raw, "group", "rates")),
+            "type": _normalize_type(_text(raw, "type", "rates")),
+            "category": _normalize_category(_text(raw, "category", "rates")),
             "rate": _decimal(_require(raw, "rate", "rates"), "rate", 4),
         })
 
@@ -289,6 +313,11 @@ def validate_shapes(frames):
     categories, rates = frames["categories"], frames["rates"]
     _shape(accounts, "account_id", r"^\d{11}$", "accounts.account_id")
     _shape(accounts, "group", r"^.{1,10}$", "accounts.group")
+    _shape(accounts, "active", r"^.{1}$", "accounts.active")
+    _shape(accounts, "open_date", r"^.{10}$", "accounts.open_date")
+    _shape(accounts, "expiration_date", r"^.{10}$", "accounts.expiration_date")
+    _shape(accounts, "reissue_date", r"^.{10}$", "accounts.reissue_date")
+    _shape(accounts, "zip", r"^.{1,10}$", "accounts.zip")
     for column in ("current_balance", "cycle_credit", "cycle_debit",
                    "credit_limit", "cash_credit_limit"):
         _scale(accounts, column, f"accounts.{column}")

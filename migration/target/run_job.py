@@ -97,9 +97,10 @@ def main(argv=None):
 
     result = {"case": args.case, "status": "error", "error_kind": None,
               "accounts": None, "transactions": None, "engine": None}
-    spark = build_spark(args.log_level)
+    spark = None
     exit_code = 0
     try:
+        spark = build_spark(args.log_level)
         cases = json.loads(args.fixtures.read_text())["cases"]
         case = next((c for c in cases if c["name"] == args.case), None)
         if case is None:
@@ -122,7 +123,8 @@ def main(argv=None):
         result.update(status="error", error_kind="UNCLASSIFIED_TARGET_ERROR")
         exit_code = 4
     finally:
-        spark.stop()
+        if spark is not None:
+            spark.stop()
 
     write_atomic(args.output, json.dumps(result, indent=2) + "\n")
     return exit_code

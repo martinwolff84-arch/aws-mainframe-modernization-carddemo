@@ -17,13 +17,16 @@ Parameters (Databricks widgets when run as a job, argparse otherwise):
 No catalog, schema, host or credential values are hard-coded; table names are
 supplied by the job configuration.
 
-Write/retry behaviour: transactions are appended first with run_id and
-batch_date columns; before appending, rows for the same run_id are deleted so
-a retried run is idempotent. The accounts output snapshot table is then fully
-overwritten, which is also idempotent. If the job fails between the two
-writes, it raises without publishing anything further; the documented retry
-is to re-run the job with the SAME run_id, which removes the partial
-transaction append and rewrites the accounts snapshot.
+Write/retry behaviour: transactions are written first as ONE atomic Delta
+commit using overwrite + replaceWhere on `run_id = '<run_id>'` — a retried
+run replaces exactly its own rows in a single transaction (the prior run's
+rows stay visible until the new commit succeeds; a failed retry leaves them
+intact). saveAsTable also creates the table when absent, though
+replaceWhere-on-create must be confirmed in the owner's workspace since
+nothing here was executed. The accounts output snapshot table is then fully
+overwritten. If the job fails between the two writes it raises without
+publishing anything further; the documented retry is to re-run the job with
+the SAME run_id. Cross-table atomicity is NOT claimed.
 """
 from __future__ import annotations
 
@@ -79,27 +82,31 @@ def run_job(spark, params):
     accounts_out, transactions_out = compute(
         frames, batch_date=params["batch_date"], as_of=params["as_of"])
 
-    # Step 1: idempotent append of this run's transactions.
-    spark.sql(
-        f"DELETE FROM {tables['transactions_out_table']} "
-        f"WHERE run_id = '{params['run_id']}'")
-    (transactions_out
-        .withColumn("run_id", F.lit(params["run_id"]))
-        .withColumn("batch_date", F.lit(params["batch_date"]))
-        .write.format("delta").mode("append")
-        .saveAsTable(tables["transactions_out_table"]))
-
-    # Step 2: full snapshot overwrite of the accounts output. If the job dies
-    # between the steps, retrying with the same run_id restores consistency:
-    # the DELETE above removes the earlier partial append and the overwrite
-    # replaces any prior snapshot.
-    accounts_out.write.format("delta").mode("overwrite") \
-        .saveAsTable(tables["accounts_out_table"])
+    write_outputs(transactions_out, accounts_out, tables, params)
 
     return {"status": "success", "run_id": params["run_id"],
             "as_of": params["as_of"], "batch_date": params["batch_date"],
             "upstream_commit": UPSTREAM_COMMIT,
             "preserve_eof_defect": PRESERVE_EOF_DEFECT}
+
+
+def write_outputs(transactions_out, accounts_out, tables, params):
+    """Publish both output tables; separated so it can be unit-tested.
+
+    Step 1 (transactions): one atomic Delta commit — overwrite with
+    replaceWhere `run_id = '<run_id>'` replaces only this run's rows, and
+    saveAsTable creates the table when absent.
+    Step 2 (accounts): full snapshot overwrite, idempotent by itself.
+    """
+    (transactions_out
+        .withColumn("run_id", F.lit(params["run_id"]))
+        .withColumn("batch_date", F.lit(params["batch_date"]))
+        .write.format("delta").mode("overwrite")
+        .option("replaceWhere", f"run_id = '{params['run_id']}'")
+        .saveAsTable(tables["transactions_out_table"]))
+
+    accounts_out.write.format("delta").mode("overwrite") \
+        .saveAsTable(tables["accounts_out_table"])
 
 
 def parse_args(argv=None):
