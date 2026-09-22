@@ -1,0 +1,43 @@
+# Databricks Declarative Automation Bundle skeleton for the CBACT04C migration.
+# NOT VALIDATED or deployed: no workspace, catalog, schema or cluster values are
+# real. Every ${var.*} is a placeholder the owner must supply per
+# docs/DATABRICKS-HANDOVER.md.
+
+bundle:
+  name: cbact04c-migration
+
+variables:
+  catalog:
+    description: "PLACEHOLDER: approved Unity Catalog name (owner decision)"
+  schema:
+    description: "PLACEHOLDER: approved schema name (owner decision)"
+  cluster_id:
+    description: "PLACEHOLDER: approved cluster/compute identifier (owner decision)"
+  run_id_prefix:
+    description: "PLACEHOLDER: run-id naming convention (owner decision)"
+    default: "cbact04c"
+
+targets:
+  dev:
+    mode: development
+    workspace:
+      host: ${var.workspace_url} # PLACEHOLDER: approved workspace URL
+
+resources:
+  jobs:
+    cbact04c_interest_batch:
+      name: cbact04c-interest-batch
+      tasks:
+        - task_key: interest_batch
+          spark_python_task:
+            python_file: ./job_entry.py
+            parameters:
+              - "--accounts-table=${var.catalog}.${var.schema}.accounts_in"       # PLACEHOLDER
+              - "--xrefs-table=${var.catalog}.${var.schema}.xrefs_in"             # PLACEHOLDER
+              - "--categories-table=${var.catalog}.${var.schema}.categories_in"   # PLACEHOLDER
+              - "--rates-table=${var.catalog}.${var.schema}.rates_in"             # PLACEHOLDER
+              - "--accounts-out-table=${var.catalog}.${var.schema}.accounts_out"  # PLACEHOLDER
+              - "--transactions-out-table=${var.catalog}.${var.schema}.transactions_out"  # PLACEHOLDER
+              - "--batch-date=${var.batch_date}"                                  # PLACEHOLDER: 10 chars
+              - "--run-id=${var.run_id_prefix}-{{job.run_id}}"
+          existing_cluster_id: ${var.cluster_id}  # PLACEHOLDER: owner-approved compute
