@@ -237,14 +237,61 @@ def _check_unique(frame, keys, label):
         raise InputValidationError("DUPLICATE_KEY", f"duplicate {label} key(s): {shown}")
 
 
-def validate_inputs(frames):
-    """Reject duplicate indexed keys using Spark aggregations.
+def _reject_offenders(frame, condition, kind, label):
+    offenders = frame.where(condition).limit(5).collect()
+    if offenders:
+        shown = ", ".join(str(tuple(row))[:120] for row in offenders)
+        raise InputValidationError(kind, f"{label}: {shown}")
 
+
+def _shape(frame, column, pattern, label):
+    _reject_offenders(frame, ~F.col(column).rlike(pattern),
+                      "MALFORMED_INPUT", f"{label} violates shape {pattern}")
+
+
+def _range(frame, column, limit, label):
+    _reject_offenders(frame, F.abs(F.col(column)) >= F.lit(Decimal(limit)),
+                      "UNSUPPORTED_RANGE", f"{label} exceeds capacity {limit}")
+
+
+def validate_shapes(frames):
+    """Enforce COBOL field shapes and S9 picture ranges on the DataFrames.
+
+    Independent of frames_from_case so callers that build frames differently
+    (e.g. the Databricks entry point reading spark.table) get the same checks.
+    Shapes raise MALFORMED_INPUT; range overflows raise UNSUPPORTED_RANGE.
+    """
+    accounts, xrefs = frames["accounts"], frames["xrefs"]
+    categories, rates = frames["categories"], frames["rates"]
+    _shape(accounts, "account_id", r"^\d{11}$", "accounts.account_id")
+    _shape(accounts, "group", r"^.{1,10}$", "accounts.group")
+    for column in ("current_balance", "cycle_credit", "cycle_debit",
+                   "credit_limit", "cash_credit_limit"):
+        _range(accounts, column, "10000000000", f"accounts.{column}")
+    _shape(xrefs, "card_number", r"^.{16}$", "xrefs.card_number")
+    _shape(xrefs, "customer_id", r"^\d{9}$", "xrefs.customer_id")
+    _shape(xrefs, "account_id", r"^\d{11}$", "xrefs.account_id")
+    _shape(categories, "account_id", r"^\d{11}$", "categories.account_id")
+    _shape(categories, "type", r"^.{2}$", "categories.type")
+    _shape(categories, "category", r"^\d{4}$", "categories.category")
+    _range(categories, "balance", "1000000000", "categories.balance")
+    _shape(rates, "group", r"^.{1,10}$", "rates.group")
+    _shape(rates, "type", r"^.{2}$", "rates.type")
+    _shape(rates, "category", r"^\d{4}$", "rates.category")
+    _range(rates, "rate", "10000", "rates.rate")
+
+
+def validate_inputs(frames):
+    """Shared input validation: shapes, ranges and indexed-key uniqueness.
+
+    Runs on the four DataFrames so every entry point (local CLI via
+    frames_from_case, Databricks via spark.table) gets identical checks.
     The COBOL files are indexed: account primary key, xref primary card number
     plus a unique alternate account key (no DUPLICATES clause), category
     (account, type, category), rate (group, type, category). Duplicate keys
     would silently multiply or shadow rows, so they are a technical rejection.
     """
+    validate_shapes(frames)
     _check_unique(frames["accounts"], ["account_id"], "accounts.account_id")
     _check_unique(frames["xrefs"], ["card_number"], "xrefs.card_number")
     _check_unique(frames["xrefs"], ["account_id"], "xrefs.account_id")

@@ -8,6 +8,7 @@ import copy
 import json
 import subprocess
 import sys
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -28,8 +29,10 @@ from pyspark.sql import types as T
 from target.interest import (
     BusinessRejection,
     InputValidationError,
+    frames_from_case,
     run_case_frames,
     to_canonical,
+    validate_inputs,
 )
 
 FIXTURES = json.loads((ROOT / "fixtures/cases.json").read_text())["cases"]
@@ -240,6 +243,30 @@ def test_duplicate_rate_key_rejected(spark):
 
 
 # --- xref field validation ---------------------------------------------------
+
+def test_validate_shapes_rejects_bad_width_on_dataframes(spark):
+    """validate_inputs on hand-built frames catches shapes frames_from_case
+    would never produce (the Databricks path has no JSON normalisation)."""
+    frames = frames_from_case(spark, load_case("baseline"))
+    frames["xrefs"] = spark.createDataFrame(
+        [("4444", "000000001", "00000000001")], frames["xrefs"].schema)
+    with pytest.raises(InputValidationError) as exc:
+        validate_inputs(frames)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_validate_shapes_rejects_out_of_range_rate(spark):
+    frames = frames_from_case(spark, load_case("baseline"))
+    wide = T.StructType([T.StructField("group", T.StringType()),
+                         T.StructField("type", T.StringType()),
+                         T.StructField("category", T.StringType()),
+                         T.StructField("rate", T.DecimalType(10, 2))])
+    frames["rates"] = spark.createDataFrame(
+        [("STANDARD", "01", "0010", Decimal("12345.00"))], wide)
+    with pytest.raises(InputValidationError) as exc:
+        validate_inputs(frames)
+    assert exc.value.kind == "UNSUPPORTED_RANGE"
+
 
 def test_short_card_number_rejected(spark):
     case = load_case("baseline")

@@ -28,6 +28,7 @@ transaction append and rewrites the accounts snapshot.
 from __future__ import annotations
 
 import argparse
+import re
 from datetime import datetime, timezone
 
 from pyspark.sql import functions as F
@@ -35,11 +36,13 @@ from pyspark.sql import functions as F
 # Platform shim only: identical business logic lives in target.interest.
 from target.interest import (
     PRESERVE_EOF_DEFECT,
-    REFERENCE_CLOCK,
     UPSTREAM_COMMIT,
+    InputValidationError,
     compute,
     validate_inputs,
 )
+
+RUN_ID_PATTERN = re.compile(r"^[A-Za-z0-9_.-]{1,64}$")
 
 
 def run_time_clock():
@@ -48,6 +51,10 @@ def run_time_clock():
 
 
 def run_job(spark, params):
+    # run_id is interpolated into a DELETE statement; bound its character set.
+    if not RUN_ID_PATTERN.fullmatch(str(params["run_id"])):
+        raise InputValidationError(
+            "MALFORMED_INPUT", f"invalid run_id: {params['run_id']!r}")
     frames = {
         "accounts": spark.table(params["accounts_table"]),
         "xrefs": spark.table(params["xrefs_table"]),
@@ -90,7 +97,7 @@ def parse_args(argv=None):
     parser.add_argument("--as-of", default=None)
     args = parser.parse_args(argv)
     params = vars(args)
-    params["as_of"] = params["as_of"] or run_time_clock() or REFERENCE_CLOCK
+    params["as_of"] = params["as_of"] or run_time_clock()
     return params
 
 

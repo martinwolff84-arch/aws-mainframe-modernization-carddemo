@@ -25,7 +25,9 @@ must choose and supply:
 
 ## Write and retry behaviour
 
-1. **Transactions first**: rows for the same `run_id` are deleted
+1. **Transactions first**: `run_id` is validated against
+   `^[A-Za-z0-9_.-]{1,64}$` (`InputValidationError`/`MALFORMED_INPUT`) before
+   it is interpolated into SQL. Rows for the same `run_id` are deleted
    (`DELETE FROM <transactions_out_table> WHERE run_id = '<run_id>'`), then
    this run's transactions are appended with `run_id` and `batch_date`
    columns via `df.write.format("delta").mode("append").saveAsTable(...)`.
