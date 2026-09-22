@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import sys
 from datetime import datetime, timezone
 
 from pyspark.sql import functions as F
@@ -140,8 +141,6 @@ def _widgets(spark):
 
 
 def main():
-    import sys
-
     from pyspark.sql import SparkSession
     spark = SparkSession.builder.getOrCreate()
     params = parse_args() if len(sys.argv) > 1 else _widgets(spark)
