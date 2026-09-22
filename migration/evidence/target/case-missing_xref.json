@@ -1,0 +1,17 @@
+{
+  "case": "missing_xref",
+  "status": "error",
+  "error_kind": "MISSING_XREF",
+  "accounts": null,
+  "transactions": null,
+  "engine": {
+    "spark_version": "3.5.6",
+    "python": "3.11.0rc1",
+    "java": "17.0.20.1",
+    "upstream_commit": "59cc6c2fd7ebd7ef7925cad552a01a4b8b6e4d5e",
+    "as_of": "2026-09-22-12.00.00.000000",
+    "batch_date": "2026092200",
+    "preserve_eof_defect": true
+  },
+  "detail": "00000000001"
+}

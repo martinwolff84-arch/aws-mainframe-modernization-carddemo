@@ -1,0 +1,474 @@
+== accounts_out ==
+== Physical Plan ==
+AdaptiveSparkPlan (48)
++- Sort (47)
+   +- Exchange (46)
+      +- Project (45)
+         +- Project (44)
+            +- SortMergeJoin LeftOuter (43)
+               :- Sort (3)
+               :  +- Exchange (2)
+               :     +- Scan ExistingRDD (1)
+               +- Sort (42)
+                  +- HashAggregate (41)
+                     +- Exchange (40)
+                        +- HashAggregate (39)
+                           +- Project (38)
+                              +- SortMergeJoin LeftOuter (37)
+                                 :- Sort (31)
+                                 :  +- Exchange (30)
+                                 :     +- Project (29)
+                                 :        +- SortMergeJoin LeftOuter (28)
+                                 :           :- Sort (23)
+                                 :           :  +- Exchange (22)
+                                 :           :     +- Project (21)
+                                 :           :        +- SortMergeJoin LeftOuter (20)
+                                 :           :           :- Project (14)
+                                 :           :           :  +- SortMergeJoin LeftOuter (13)
+                                 :           :           :     :- Sort (7)
+                                 :           :           :     :  +- Exchange (6)
+                                 :           :           :     :     +- Filter (5)
+                                 :           :           :     :        +- Scan ExistingRDD (4)
+                                 :           :           :     +- Sort (12)
+                                 :           :           :        +- Exchange (11)
+                                 :           :           :           +- Project (10)
+                                 :           :           :              +- Filter (9)
+                                 :           :           :                 +- Scan ExistingRDD (8)
+                                 :           :           +- Sort (19)
+                                 :           :              +- Exchange (18)
+                                 :           :                 +- Project (17)
+                                 :           :                    +- Filter (16)
+                                 :           :                       +- Scan ExistingRDD (15)
+                                 :           +- Sort (27)
+                                 :              +- Exchange (26)
+                                 :                 +- Project (25)
+                                 :                    +- Scan ExistingRDD (24)
+                                 +- Sort (36)
+                                    +- Exchange (35)
+                                       +- Project (34)
+                                          +- Filter (33)
+                                             +- Scan ExistingRDD (32)
+
+
+(1) Scan ExistingRDD
+Output [12]: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+Arguments: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11], MapPartitionsRDD[4] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(2) Exchange
+Input [12]: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+Arguments: hashpartitioning(account_id#0, 2), ENSURE_REQUIREMENTS, [plan_id=6477]
+
+(3) Sort
+Input [12]: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+Arguments: [account_id#0 ASC NULLS FIRST], false, 0
+
+(4) Scan ExistingRDD
+Output [4]: [account_id#30, type#31, category#32, balance#33]
+Arguments: [account_id#30, type#31, category#32, balance#33], MapPartitionsRDD[14] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(5) Filter
+Input [4]: [account_id#30, type#31, category#32, balance#33]
+Condition : NOT (account_id#30 = 00000000006)
+
+(6) Exchange
+Input [4]: [account_id#30, type#31, category#32, balance#33]
+Arguments: hashpartitioning(account_id#30, 2), ENSURE_REQUIREMENTS, [plan_id=6443]
+
+(7) Sort
+Input [4]: [account_id#30, type#31, category#32, balance#33]
+Arguments: [account_id#30 ASC NULLS FIRST], false, 0
+
+(8) Scan ExistingRDD
+Output [12]: [account_id#377, group#378, current_balance#379, cycle_credit#380, cycle_debit#381, active#382, credit_limit#383, cash_credit_limit#384, open_date#385, expiration_date#386, reissue_date#387, zip#388]
+Arguments: [account_id#377, group#378, current_balance#379, cycle_credit#380, cycle_debit#381, active#382, credit_limit#383, cash_credit_limit#384, open_date#385, expiration_date#386, reissue_date#387, zip#388], MapPartitionsRDD[4] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(9) Filter
+Input [12]: [account_id#377, group#378, current_balance#379, cycle_credit#380, cycle_debit#381, active#382, credit_limit#383, cash_credit_limit#384, open_date#385, expiration_date#386, reissue_date#387, zip#388]
+Condition : NOT (account_id#377 = 00000000006)
+
+(10) Project
+Output [2]: [account_id#377, group#378]
+Input [12]: [account_id#377, group#378, current_balance#379, cycle_credit#380, cycle_debit#381, active#382, credit_limit#383, cash_credit_limit#384, open_date#385, expiration_date#386, reissue_date#387, zip#388]
+
+(11) Exchange
+Input [2]: [account_id#377, group#378]
+Arguments: hashpartitioning(account_id#377, 2), ENSURE_REQUIREMENTS, [plan_id=6444]
+
+(12) Sort
+Input [2]: [account_id#377, group#378]
+Arguments: [account_id#377 ASC NULLS FIRST], false, 0
+
+(13) SortMergeJoin
+Left keys [1]: [account_id#30]
+Right keys [1]: [account_id#377]
+Join type: LeftOuter
+Join condition: None
+
+(14) Project
+Output [5]: [account_id#30, type#31, category#32, balance#33, group#378]
+Input [6]: [account_id#30, type#31, category#32, balance#33, account_id#377, group#378]
+
+(15) Scan ExistingRDD
+Output [3]: [card_number#24, customer_id#25, account_id#26]
+Arguments: [card_number#24, customer_id#25, account_id#26], MapPartitionsRDD[9] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(16) Filter
+Input [3]: [card_number#24, customer_id#25, account_id#26]
+Condition : NOT (account_id#26 = 00000000006)
+
+(17) Project
+Output [1]: [account_id#26]
+Input [3]: [card_number#24, customer_id#25, account_id#26]
+
+(18) Exchange
+Input [1]: [account_id#26]
+Arguments: hashpartitioning(account_id#26, 2), ENSURE_REQUIREMENTS, [plan_id=6451]
+
+(19) Sort
+Input [1]: [account_id#26]
+Arguments: [account_id#26 ASC NULLS FIRST], false, 0
+
+(20) SortMergeJoin
+Left keys [1]: [account_id#30]
+Right keys [1]: [account_id#26]
+Join type: LeftOuter
+Join condition: None
+
+(21) Project
+Output [5]: [account_id#30, type#31, category#32, balance#33, group#378]
+Input [6]: [account_id#30, type#31, category#32, balance#33, group#378, account_id#26]
+
+(22) Exchange
+Input [5]: [account_id#30, type#31, category#32, balance#33, group#378]
+Arguments: hashpartitioning(group#378, type#31, category#32, 2), ENSURE_REQUIREMENTS, [plan_id=6457]
+
+(23) Sort
+Input [5]: [account_id#30, type#31, category#32, balance#33, group#378]
+Arguments: [group#378 ASC NULLS FIRST, type#31 ASC NULLS FIRST, category#32 ASC NULLS FIRST], false, 0
+
+(24) Scan ExistingRDD
+Output [4]: [group#38, type#39, category#40, rate#41]
+Arguments: [group#38, type#39, category#40, rate#41], MapPartitionsRDD[19] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(25) Project
+Output [4]: [group#38, type#39, category#40, rate#41 AS specific_rate#141]
+Input [4]: [group#38, type#39, category#40, rate#41]
+
+(26) Exchange
+Input [4]: [group#38, type#39, category#40, specific_rate#141]
+Arguments: hashpartitioning(group#38, type#39, category#40, 2), ENSURE_REQUIREMENTS, [plan_id=6458]
+
+(27) Sort
+Input [4]: [group#38, type#39, category#40, specific_rate#141]
+Arguments: [group#38 ASC NULLS FIRST, type#39 ASC NULLS FIRST, category#40 ASC NULLS FIRST], false, 0
+
+(28) SortMergeJoin
+Left keys [3]: [group#378, type#31, category#32]
+Right keys [3]: [group#38, type#39, category#40]
+Join type: LeftOuter
+Join condition: None
+
+(29) Project
+Output [5]: [type#31, category#32, account_id#30, balance#33, specific_rate#141]
+Input [9]: [account_id#30, type#31, category#32, balance#33, group#378, group#38, type#39, category#40, specific_rate#141]
+
+(30) Exchange
+Input [5]: [type#31, category#32, account_id#30, balance#33, specific_rate#141]
+Arguments: hashpartitioning(type#31, category#32, 2), ENSURE_REQUIREMENTS, [plan_id=6465]
+
+(31) Sort
+Input [5]: [type#31, category#32, account_id#30, balance#33, specific_rate#141]
+Arguments: [type#31 ASC NULLS FIRST, category#32 ASC NULLS FIRST], false, 0
+
+(32) Scan ExistingRDD
+Output [4]: [group#159, type#160, category#161, rate#162]
+Arguments: [group#159, type#160, category#161, rate#162], MapPartitionsRDD[19] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(33) Filter
+Input [4]: [group#159, type#160, category#161, rate#162]
+Condition : (group#159 = DEFAULT)
+
+(34) Project
+Output [3]: [type#160, category#161, rate#162 AS default_rate#155]
+Input [4]: [group#159, type#160, category#161, rate#162]
+
+(35) Exchange
+Input [3]: [type#160, category#161, default_rate#155]
+Arguments: hashpartitioning(type#160, category#161, 2), ENSURE_REQUIREMENTS, [plan_id=6466]
+
+(36) Sort
+Input [3]: [type#160, category#161, default_rate#155]
+Arguments: [type#160 ASC NULLS FIRST, category#161 ASC NULLS FIRST], false, 0
+
+(37) SortMergeJoin
+Left keys [2]: [type#31, category#32]
+Right keys [2]: [type#160, category#161]
+Join type: LeftOuter
+Join condition: None
+
+(38) Project
+Output [2]: [account_id#30, ((cast((balance#33 * 100) as bigint) * cast((coalesce(specific_rate#141, default_rate#155) * 100) as bigint)) div 120000) AS interest_cents#249L]
+Input [8]: [type#31, category#32, account_id#30, balance#33, specific_rate#141, type#160, category#161, default_rate#155]
+
+(39) HashAggregate
+Input [2]: [account_id#30, interest_cents#249L]
+Keys [1]: [account_id#30]
+Functions [1]: [partial_sum(interest_cents#249L)]
+Aggregate Attributes [1]: [sum#493L]
+Results [2]: [account_id#30, sum#494L]
+
+(40) Exchange
+Input [2]: [account_id#30, sum#494L]
+Arguments: hashpartitioning(account_id#30, 2), ENSURE_REQUIREMENTS, [plan_id=6473]
+
+(41) HashAggregate
+Input [2]: [account_id#30, sum#494L]
+Keys [1]: [account_id#30]
+Functions [1]: [sum(interest_cents#249L)]
+Aggregate Attributes [1]: [sum(interest_cents#249L)#366L]
+Results [2]: [account_id#30, sum(interest_cents#249L)#366L AS total_cents#367L]
+
+(42) Sort
+Input [2]: [account_id#30, total_cents#367L]
+Arguments: [account_id#30 ASC NULLS FIRST], false, 0
+
+(43) SortMergeJoin
+Left keys [1]: [account_id#0]
+Right keys [1]: [account_id#30]
+Join type: LeftOuter
+Join condition: None
+
+(44) Project
+Output [14]: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11, total_cents#367L, CASE WHEN isnotnull(total_cents#367L) THEN (cast((current_balance#2 * 100) as bigint) + total_cents#367L) END AS new_balance_cents#402L]
+Input [14]: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11, account_id#30, total_cents#367L]
+
+(45) Project
+Output [12]: [account_id#0, group#1, CASE WHEN isnull(new_balance_cents#402L) THEN current_balance#2 ELSE cast((cast(new_balance_cents#402L as decimal(20,0)) * 0.01) as decimal(12,2)) END AS current_balance#417, CASE WHEN isnotnull(total_cents#367L) THEN 0.00 ELSE cycle_credit#3 END AS cycle_credit#432, CASE WHEN isnotnull(total_cents#367L) THEN 0.00 ELSE cycle_debit#4 END AS cycle_debit#447, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+Input [14]: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11, total_cents#367L, new_balance_cents#402L]
+
+(46) Exchange
+Input [12]: [account_id#0, group#1, current_balance#417, cycle_credit#432, cycle_debit#447, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+Arguments: rangepartitioning(account_id#0 ASC NULLS FIRST, 2), ENSURE_REQUIREMENTS, [plan_id=6484]
+
+(47) Sort
+Input [12]: [account_id#0, group#1, current_balance#417, cycle_credit#432, cycle_debit#447, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+Arguments: [account_id#0 ASC NULLS FIRST], true, 0
+
+(48) AdaptiveSparkPlan
+Output [12]: [account_id#0, group#1, current_balance#417, cycle_credit#432, cycle_debit#447, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+Arguments: isFinalPlan=false
+
+
+== transactions_out ==
+== Physical Plan ==
+AdaptiveSparkPlan (40)
++- Project (39)
+   +- Sort (38)
+      +- Project (37)
+         +- Window (36)
+            +- Sort (35)
+               +- Exchange (34)
+                  +- Project (33)
+                     +- Filter (32)
+                        +- SortMergeJoin LeftOuter (31)
+                           :- Sort (25)
+                           :  +- Exchange (24)
+                           :     +- Project (23)
+                           :        +- SortMergeJoin LeftOuter (22)
+                           :           :- Sort (17)
+                           :           :  +- Exchange (16)
+                           :           :     +- Project (15)
+                           :           :        +- SortMergeJoin LeftOuter (14)
+                           :           :           :- Project (9)
+                           :           :           :  +- SortMergeJoin LeftOuter (8)
+                           :           :           :     :- Sort (3)
+                           :           :           :     :  +- Exchange (2)
+                           :           :           :     :     +- Scan ExistingRDD (1)
+                           :           :           :     +- Sort (7)
+                           :           :           :        +- Exchange (6)
+                           :           :           :           +- Project (5)
+                           :           :           :              +- Scan ExistingRDD (4)
+                           :           :           +- Sort (13)
+                           :           :              +- Exchange (12)
+                           :           :                 +- Project (11)
+                           :           :                    +- Scan ExistingRDD (10)
+                           :           +- Sort (21)
+                           :              +- Exchange (20)
+                           :                 +- Project (19)
+                           :                    +- Scan ExistingRDD (18)
+                           +- Sort (30)
+                              +- Exchange (29)
+                                 +- Project (28)
+                                    +- Filter (27)
+                                       +- Scan ExistingRDD (26)
+
+
+(1) Scan ExistingRDD
+Output [4]: [account_id#30, type#31, category#32, balance#33]
+Arguments: [account_id#30, type#31, category#32, balance#33], MapPartitionsRDD[14] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(2) Exchange
+Input [4]: [account_id#30, type#31, category#32, balance#33]
+Arguments: hashpartitioning(account_id#30, 2), ENSURE_REQUIREMENTS, [plan_id=6579]
+
+(3) Sort
+Input [4]: [account_id#30, type#31, category#32, balance#33]
+Arguments: [account_id#30 ASC NULLS FIRST], false, 0
+
+(4) Scan ExistingRDD
+Output [12]: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+Arguments: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11], MapPartitionsRDD[4] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(5) Project
+Output [2]: [account_id#0, group#1]
+Input [12]: [account_id#0, group#1, current_balance#2, cycle_credit#3, cycle_debit#4, active#5, credit_limit#6, cash_credit_limit#7, open_date#8, expiration_date#9, reissue_date#10, zip#11]
+
+(6) Exchange
+Input [2]: [account_id#0, group#1]
+Arguments: hashpartitioning(account_id#0, 2), ENSURE_REQUIREMENTS, [plan_id=6580]
+
+(7) Sort
+Input [2]: [account_id#0, group#1]
+Arguments: [account_id#0 ASC NULLS FIRST], false, 0
+
+(8) SortMergeJoin
+Left keys [1]: [account_id#30]
+Right keys [1]: [account_id#0]
+Join type: LeftOuter
+Join condition: None
+
+(9) Project
+Output [5]: [account_id#30, type#31, category#32, balance#33, group#1]
+Input [6]: [account_id#30, type#31, category#32, balance#33, account_id#0, group#1]
+
+(10) Scan ExistingRDD
+Output [3]: [card_number#24, customer_id#25, account_id#26]
+Arguments: [card_number#24, customer_id#25, account_id#26], MapPartitionsRDD[9] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(11) Project
+Output [2]: [account_id#26, card_number#24]
+Input [3]: [card_number#24, customer_id#25, account_id#26]
+
+(12) Exchange
+Input [2]: [account_id#26, card_number#24]
+Arguments: hashpartitioning(account_id#26, 2), ENSURE_REQUIREMENTS, [plan_id=6587]
+
+(13) Sort
+Input [2]: [account_id#26, card_number#24]
+Arguments: [account_id#26 ASC NULLS FIRST], false, 0
+
+(14) SortMergeJoin
+Left keys [1]: [account_id#30]
+Right keys [1]: [account_id#26]
+Join type: LeftOuter
+Join condition: None
+
+(15) Project
+Output [6]: [account_id#30, type#31, category#32, balance#33, group#1, card_number#24]
+Input [7]: [account_id#30, type#31, category#32, balance#33, group#1, account_id#26, card_number#24]
+
+(16) Exchange
+Input [6]: [account_id#30, type#31, category#32, balance#33, group#1, card_number#24]
+Arguments: hashpartitioning(group#1, type#31, category#32, 2), ENSURE_REQUIREMENTS, [plan_id=6593]
+
+(17) Sort
+Input [6]: [account_id#30, type#31, category#32, balance#33, group#1, card_number#24]
+Arguments: [group#1 ASC NULLS FIRST, type#31 ASC NULLS FIRST, category#32 ASC NULLS FIRST], false, 0
+
+(18) Scan ExistingRDD
+Output [4]: [group#38, type#39, category#40, rate#41]
+Arguments: [group#38, type#39, category#40, rate#41], MapPartitionsRDD[19] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(19) Project
+Output [4]: [group#38, type#39, category#40, rate#41 AS specific_rate#141]
+Input [4]: [group#38, type#39, category#40, rate#41]
+
+(20) Exchange
+Input [4]: [group#38, type#39, category#40, specific_rate#141]
+Arguments: hashpartitioning(group#38, type#39, category#40, 2), ENSURE_REQUIREMENTS, [plan_id=6594]
+
+(21) Sort
+Input [4]: [group#38, type#39, category#40, specific_rate#141]
+Arguments: [group#38 ASC NULLS FIRST, type#39 ASC NULLS FIRST, category#40 ASC NULLS FIRST], false, 0
+
+(22) SortMergeJoin
+Left keys [3]: [group#1, type#31, category#32]
+Right keys [3]: [group#38, type#39, category#40]
+Join type: LeftOuter
+Join condition: None
+
+(23) Project
+Output [6]: [type#31, category#32, account_id#30, balance#33, card_number#24, specific_rate#141]
+Input [10]: [account_id#30, type#31, category#32, balance#33, group#1, card_number#24, group#38, type#39, category#40, specific_rate#141]
+
+(24) Exchange
+Input [6]: [type#31, category#32, account_id#30, balance#33, card_number#24, specific_rate#141]
+Arguments: hashpartitioning(type#31, category#32, 2), ENSURE_REQUIREMENTS, [plan_id=6601]
+
+(25) Sort
+Input [6]: [type#31, category#32, account_id#30, balance#33, card_number#24, specific_rate#141]
+Arguments: [type#31 ASC NULLS FIRST, category#32 ASC NULLS FIRST], false, 0
+
+(26) Scan ExistingRDD
+Output [4]: [group#159, type#160, category#161, rate#162]
+Arguments: [group#159, type#160, category#161, rate#162], MapPartitionsRDD[19] at applySchemaToPythonRDD at NativeMethodAccessorImpl.java:0, ExistingRDD, UnknownPartitioning(0)
+
+(27) Filter
+Input [4]: [group#159, type#160, category#161, rate#162]
+Condition : (group#159 = DEFAULT)
+
+(28) Project
+Output [3]: [type#160, category#161, rate#162 AS default_rate#155]
+Input [4]: [group#159, type#160, category#161, rate#162]
+
+(29) Exchange
+Input [3]: [type#160, category#161, default_rate#155]
+Arguments: hashpartitioning(type#160, category#161, 2), ENSURE_REQUIREMENTS, [plan_id=6602]
+
+(30) Sort
+Input [3]: [type#160, category#161, default_rate#155]
+Arguments: [type#160 ASC NULLS FIRST, category#161 ASC NULLS FIRST], false, 0
+
+(31) SortMergeJoin
+Left keys [2]: [type#31, category#32]
+Right keys [2]: [type#160, category#161]
+Join type: LeftOuter
+Join condition: None
+
+(32) Filter
+Input [9]: [type#31, category#32, account_id#30, balance#33, card_number#24, specific_rate#141, type#160, category#161, default_rate#155]
+Condition : NOT (coalesce(specific_rate#141, default_rate#155) = 0.00)
+
+(33) Project
+Output [5]: [type#31, category#32, account_id#30, card_number#24, ((cast((balance#33 * 100) as bigint) * cast((coalesce(specific_rate#141, default_rate#155) * 100) as bigint)) div 120000) AS interest_cents#249L]
+Input [9]: [type#31, category#32, account_id#30, balance#33, card_number#24, specific_rate#141, type#160, category#161, default_rate#155]
+
+(34) Exchange
+Input [5]: [type#31, category#32, account_id#30, card_number#24, interest_cents#249L]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=6609]
+
+(35) Sort
+Input [5]: [type#31, category#32, account_id#30, card_number#24, interest_cents#249L]
+Arguments: [account_id#30 ASC NULLS FIRST, type#31 ASC NULLS FIRST, category#32 ASC NULLS FIRST], false, 0
+
+(36) Window
+Input [5]: [type#31, category#32, account_id#30, card_number#24, interest_cents#249L]
+Arguments: [row_number() windowspecdefinition(account_id#30 ASC NULLS FIRST, type#31 ASC NULLS FIRST, category#32 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS seq#309], [account_id#30 ASC NULLS FIRST, type#31 ASC NULLS FIRST, category#32 ASC NULLS FIRST]
+
+(37) Project
+Output [5]: [concat(2026092200, lpad(cast(seq#309 as string), 6, 0)) AS transaction_id#326, concat(Int. for a/c , account_id#30) AS description#330, cast((cast(interest_cents#249L as decimal(20,0)) * 0.01) as decimal(11,2)) AS amount#331, card_number#24, seq#309]
+Input [6]: [type#31, category#32, account_id#30, card_number#24, interest_cents#249L, seq#309]
+
+(38) Sort
+Input [5]: [transaction_id#326, description#330, amount#331, card_number#24, seq#309]
+Arguments: [seq#309 ASC NULLS FIRST], true, 0
+
+(39) Project
+Output [13]: [transaction_id#326, 01 AS type#327, 0005 AS category#328, System AS source#329, description#330, amount#331, card_number#24, 2026-09-22-12.00.00.000000 AS original_timestamp#332, 2026-09-22-12.00.00.000000 AS processing_timestamp#333, 000000000 AS merchant_id#334,  AS merchant_name#335,  AS merchant_city#336,  AS merchant_zip#337]
+Input [5]: [transaction_id#326, description#330, amount#331, card_number#24, seq#309]
+
+(40) AdaptiveSparkPlan
+Output [13]: [transaction_id#326, type#327, category#328, source#329, description#330, amount#331, card_number#24, original_timestamp#332, processing_timestamp#333, merchant_id#334, merchant_name#335, merchant_city#336, merchant_zip#337]
+Arguments: isFinalPlan=false
+
+

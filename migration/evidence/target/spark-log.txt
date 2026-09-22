@@ -1,0 +1,200 @@
+26/09/22 15:27:52 INFO DAGScheduler: Got job 0 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:52 INFO DAGScheduler: Final stage: ResultStage 0 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:52 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:52 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:52 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[21] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:52 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:52 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[21] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:27:55 INFO DAGScheduler: ResultStage 0 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 3.055 s
+26/09/22 15:27:55 INFO DAGScheduler: Job 0 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:55 INFO DAGScheduler: Job 0 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 3.168659 s
+26/09/22 15:27:55 INFO DAGScheduler: Got job 1 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:55 INFO DAGScheduler: Final stage: ResultStage 1 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:55 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:55 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:55 INFO DAGScheduler: Submitting ResultStage 1 (MapPartitionsRDD[21] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:55 INFO SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:55 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 1 (MapPartitionsRDD[21] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:27:55 INFO DAGScheduler: ResultStage 1 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.331 s
+26/09/22 15:27:55 INFO DAGScheduler: Job 1 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:55 INFO DAGScheduler: Job 1 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.342548 s
+26/09/22 15:27:55 INFO DAGScheduler: Got job 2 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:55 INFO DAGScheduler: Final stage: ResultStage 2 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:55 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:55 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:55 INFO DAGScheduler: Submitting ResultStage 2 (MapPartitionsRDD[23] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:55 INFO SparkContext: Created broadcast 2 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:55 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 2 (MapPartitionsRDD[23] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:27:56 INFO DAGScheduler: ResultStage 2 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.403 s
+26/09/22 15:27:56 INFO DAGScheduler: Job 2 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:56 INFO DAGScheduler: Job 2 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.426390 s
+26/09/22 15:27:56 INFO DAGScheduler: Got job 3 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:56 INFO DAGScheduler: Final stage: ResultStage 3 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:56 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:56 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:56 INFO DAGScheduler: Submitting ResultStage 3 (MapPartitionsRDD[23] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:56 INFO SparkContext: Created broadcast 3 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:56 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 3 (MapPartitionsRDD[23] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:27:56 INFO DAGScheduler: ResultStage 3 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.250 s
+26/09/22 15:27:56 INFO DAGScheduler: Job 3 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:56 INFO DAGScheduler: Job 3 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.265885 s
+26/09/22 15:27:56 INFO DAGScheduler: Got job 4 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:56 INFO DAGScheduler: Final stage: ResultStage 4 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:56 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:56 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:56 INFO DAGScheduler: Submitting ResultStage 4 (MapPartitionsRDD[25] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:56 INFO SparkContext: Created broadcast 4 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:56 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 4 (MapPartitionsRDD[25] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:27:57 INFO DAGScheduler: ResultStage 4 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.245 s
+26/09/22 15:27:57 INFO DAGScheduler: Job 4 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:57 INFO DAGScheduler: Job 4 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.256596 s
+26/09/22 15:27:57 INFO DAGScheduler: Got job 5 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:57 INFO DAGScheduler: Final stage: ResultStage 5 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:57 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:57 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:57 INFO DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[25] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:57 INFO SparkContext: Created broadcast 5 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:57 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[25] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:27:57 INFO DAGScheduler: ResultStage 5 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.302 s
+26/09/22 15:27:57 INFO DAGScheduler: Job 5 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:57 INFO DAGScheduler: Job 5 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.307060 s
+26/09/22 15:27:57 INFO DAGScheduler: Got job 6 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:57 INFO DAGScheduler: Final stage: ResultStage 6 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:57 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:57 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:57 INFO DAGScheduler: Submitting ResultStage 6 (MapPartitionsRDD[27] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:57 INFO SparkContext: Created broadcast 6 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:57 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 6 (MapPartitionsRDD[27] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:27:58 INFO DAGScheduler: ResultStage 6 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.309 s
+26/09/22 15:27:58 INFO DAGScheduler: Job 6 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:58 INFO DAGScheduler: Job 6 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.316385 s
+26/09/22 15:27:58 INFO DAGScheduler: Got job 7 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:58 INFO DAGScheduler: Final stage: ResultStage 7 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:58 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:58 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:58 INFO DAGScheduler: Submitting ResultStage 7 (MapPartitionsRDD[27] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:58 INFO SparkContext: Created broadcast 7 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:58 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 7 (MapPartitionsRDD[27] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:27:58 INFO DAGScheduler: ResultStage 7 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.292 s
+26/09/22 15:27:58 INFO DAGScheduler: Job 7 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:58 INFO DAGScheduler: Job 7 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.295428 s
+26/09/22 15:27:58 INFO DAGScheduler: Got job 8 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:58 INFO DAGScheduler: Final stage: ResultStage 8 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:58 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:58 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:58 INFO DAGScheduler: Submitting ResultStage 8 (MapPartitionsRDD[29] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:58 INFO SparkContext: Created broadcast 8 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:58 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 8 (MapPartitionsRDD[29] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:27:58 INFO DAGScheduler: ResultStage 8 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.246 s
+26/09/22 15:27:58 INFO DAGScheduler: Job 8 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:58 INFO DAGScheduler: Job 8 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.264908 s
+26/09/22 15:27:58 INFO DAGScheduler: Got job 9 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:58 INFO DAGScheduler: Final stage: ResultStage 9 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:58 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:58 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:58 INFO DAGScheduler: Submitting ResultStage 9 (MapPartitionsRDD[29] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:58 INFO SparkContext: Created broadcast 9 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:58 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 9 (MapPartitionsRDD[29] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:27:59 INFO DAGScheduler: ResultStage 9 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.238 s
+26/09/22 15:27:59 INFO DAGScheduler: Job 9 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:59 INFO DAGScheduler: Job 9 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.245191 s
+26/09/22 15:27:59 INFO DAGScheduler: Got job 10 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:59 INFO DAGScheduler: Final stage: ResultStage 10 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:59 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:59 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:59 INFO DAGScheduler: Submitting ResultStage 10 (MapPartitionsRDD[31] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:59 INFO SparkContext: Created broadcast 10 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:59 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 10 (MapPartitionsRDD[31] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:27:59 INFO DAGScheduler: ResultStage 10 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.428 s
+26/09/22 15:27:59 INFO DAGScheduler: Job 10 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:27:59 INFO DAGScheduler: Job 10 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.443461 s
+26/09/22 15:27:59 INFO DAGScheduler: Got job 11 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:27:59 INFO DAGScheduler: Final stage: ResultStage 11 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:27:59 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:27:59 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:27:59 INFO DAGScheduler: Submitting ResultStage 11 (MapPartitionsRDD[31] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:27:59 INFO SparkContext: Created broadcast 11 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:27:59 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 11 (MapPartitionsRDD[31] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:28:00 INFO DAGScheduler: ResultStage 11 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.338 s
+26/09/22 15:28:00 INFO DAGScheduler: Job 11 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:00 INFO DAGScheduler: Job 11 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.358303 s
+26/09/22 15:28:00 INFO DAGScheduler: Got job 12 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:28:00 INFO DAGScheduler: Final stage: ResultStage 12 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:28:00 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:28:00 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:28:00 INFO DAGScheduler: Submitting ResultStage 12 (MapPartitionsRDD[33] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:28:00 INFO SparkContext: Created broadcast 12 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:28:00 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 12 (MapPartitionsRDD[33] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:28:00 INFO DAGScheduler: ResultStage 12 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.486 s
+26/09/22 15:28:00 INFO DAGScheduler: Job 12 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:00 INFO DAGScheduler: Job 12 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.504441 s
+26/09/22 15:28:00 INFO DAGScheduler: Got job 13 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:28:00 INFO DAGScheduler: Final stage: ResultStage 13 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:28:00 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:28:00 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:28:00 INFO DAGScheduler: Submitting ResultStage 13 (MapPartitionsRDD[33] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:28:00 INFO SparkContext: Created broadcast 13 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:28:00 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 13 (MapPartitionsRDD[33] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:28:01 INFO DAGScheduler: ResultStage 13 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.277 s
+26/09/22 15:28:01 INFO DAGScheduler: Job 13 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:01 INFO DAGScheduler: Job 13 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.285849 s
+26/09/22 15:28:01 INFO DAGScheduler: Got job 14 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:28:01 INFO DAGScheduler: Final stage: ResultStage 14 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:28:01 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:28:01 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:28:01 INFO DAGScheduler: Submitting ResultStage 14 (MapPartitionsRDD[35] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:28:01 INFO SparkContext: Created broadcast 14 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:28:01 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 14 (MapPartitionsRDD[35] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:28:01 INFO DAGScheduler: ResultStage 14 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.310 s
+26/09/22 15:28:01 INFO DAGScheduler: Job 14 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:01 INFO DAGScheduler: Job 14 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.328753 s
+26/09/22 15:28:01 INFO DAGScheduler: Got job 15 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:28:01 INFO DAGScheduler: Final stage: ResultStage 15 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:28:01 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:28:01 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:28:01 INFO DAGScheduler: Submitting ResultStage 15 (MapPartitionsRDD[35] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:28:01 INFO SparkContext: Created broadcast 15 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:28:01 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 15 (MapPartitionsRDD[35] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:28:02 INFO DAGScheduler: ResultStage 15 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.376 s
+26/09/22 15:28:02 INFO DAGScheduler: Job 15 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:02 INFO DAGScheduler: Job 15 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.404258 s
+26/09/22 15:28:02 INFO DAGScheduler: Got job 16 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:28:02 INFO DAGScheduler: Final stage: ResultStage 16 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:28:02 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:28:02 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:28:02 INFO DAGScheduler: Submitting ResultStage 16 (MapPartitionsRDD[37] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:28:02 INFO SparkContext: Created broadcast 16 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:28:02 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 16 (MapPartitionsRDD[37] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:28:02 INFO DAGScheduler: ResultStage 16 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.329 s
+26/09/22 15:28:02 INFO DAGScheduler: Job 16 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:02 INFO DAGScheduler: Job 16 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.339762 s
+26/09/22 15:28:02 INFO DAGScheduler: Got job 17 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:28:02 INFO DAGScheduler: Final stage: ResultStage 17 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:28:02 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:28:02 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:28:02 INFO DAGScheduler: Submitting ResultStage 17 (MapPartitionsRDD[37] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:28:02 INFO SparkContext: Created broadcast 17 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:28:02 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 17 (MapPartitionsRDD[37] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:28:03 INFO DAGScheduler: ResultStage 17 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.337 s
+26/09/22 15:28:03 INFO DAGScheduler: Job 17 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:03 INFO DAGScheduler: Job 17 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.354263 s
+26/09/22 15:28:03 INFO DAGScheduler: Got job 18 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:28:03 INFO DAGScheduler: Final stage: ResultStage 18 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:28:03 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:28:03 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:28:03 INFO DAGScheduler: Submitting ResultStage 18 (MapPartitionsRDD[39] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:28:03 INFO SparkContext: Created broadcast 18 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:28:03 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 18 (MapPartitionsRDD[39] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(0))
+26/09/22 15:28:03 INFO DAGScheduler: ResultStage 18 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.369 s
+26/09/22 15:28:03 INFO DAGScheduler: Job 18 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:03 INFO DAGScheduler: Job 18 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.389194 s
+26/09/22 15:28:03 INFO DAGScheduler: Got job 19 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) with 1 output partitions
+26/09/22 15:28:03 INFO DAGScheduler: Final stage: ResultStage 19 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241)
+26/09/22 15:28:03 INFO DAGScheduler: Parents of final stage: List()
+26/09/22 15:28:03 INFO DAGScheduler: Missing parents: List()
+26/09/22 15:28:03 INFO DAGScheduler: Submitting ResultStage 19 (MapPartitionsRDD[39] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241), which has no missing parents
+26/09/22 15:28:03 INFO SparkContext: Created broadcast 19 from broadcast at DAGScheduler.scala:1611
+26/09/22 15:28:03 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 19 (MapPartitionsRDD[39] at collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) (first 15 tasks are for partitions Vector(1))
+26/09/22 15:28:04 INFO DAGScheduler: ResultStage 19 (collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241) finished in 0.424 s
+26/09/22 15:28:04 INFO DAGScheduler: Job 19 is finished. Cancelling potential speculative or zombie tasks for this job
+26/09/22 15:28:04 INFO DAGScheduler: Job 19 finished: collect at /home/ubuntu/repos/carddemo/migration/target/interest.py:241, took 0.431582 s
