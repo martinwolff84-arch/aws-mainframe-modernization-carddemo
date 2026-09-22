@@ -42,13 +42,13 @@ from target.interest import (
 )
 
 
-def build_spark():
+def build_spark(log_level="ERROR"):
     from pyspark.sql import SparkSession
     spark = (SparkSession.builder.master("local[2]").appName("cbact04c-migration")
              .config("spark.ui.enabled", "false")
              .config("spark.driver.bindAddress", "127.0.0.1")
              .config("spark.sql.shuffle.partitions", "2").getOrCreate())
-    spark.sparkContext.setLogLevel("ERROR")
+    spark.sparkContext.setLogLevel(log_level)
     return spark
 
 
@@ -91,11 +91,13 @@ def main(argv=None):
                         help="DB2-format timestamp stamped on transactions")
     parser.add_argument("--explain", action="store_true",
                         help="Write formatted Spark plans to <output>.plan.txt")
+    parser.add_argument("--log-level", default="ERROR",
+                        help="Spark context log level (default ERROR)")
     args = parser.parse_args(argv)
 
     result = {"case": args.case, "status": "error", "error_kind": None,
               "accounts": None, "transactions": None, "engine": None}
-    spark = build_spark()
+    spark = build_spark(args.log_level)
     exit_code = 0
     try:
         cases = json.loads(args.fixtures.read_text())["cases"]

@@ -1,0 +1,79 @@
+{
+  "scope": "target output parity with unchanged COBOL under GnuCOBOL",
+  "spark_execution_verified_by_this_comparator": false,
+  "additional_gate": "Review real Spark transformations and executed Spark plan/logs; no Databricks or z/OS certification",
+  "total": 10,
+  "passed": 10,
+  "results": [
+    {
+      "case": "baseline",
+      "passed": true,
+      "account_count": 7,
+      "transaction_count": 10,
+      "differences": []
+    },
+    {
+      "case": "empty",
+      "passed": true,
+      "account_count": 7,
+      "transaction_count": 0,
+      "differences": []
+    },
+    {
+      "case": "single_account_eof",
+      "passed": true,
+      "account_count": 7,
+      "transaction_count": 1,
+      "differences": []
+    },
+    {
+      "case": "negative_rate",
+      "passed": true,
+      "account_count": 7,
+      "transaction_count": 3,
+      "differences": []
+    },
+    {
+      "case": "fractional_rate",
+      "passed": true,
+      "account_count": 7,
+      "transaction_count": 3,
+      "differences": []
+    },
+    {
+      "case": "inactive_account",
+      "passed": true,
+      "account_count": 7,
+      "transaction_count": 10,
+      "differences": []
+    },
+    {
+      "case": "input_order",
+      "passed": true,
+      "account_count": 7,
+      "transaction_count": 10,
+      "differences": []
+    },
+    {
+      "case": "missing_account",
+      "passed": true,
+      "account_count": 0,
+      "transaction_count": 0,
+      "differences": []
+    },
+    {
+      "case": "missing_xref",
+      "passed": true,
+      "account_count": 0,
+      "transaction_count": 0,
+      "differences": []
+    },
+    {
+      "case": "missing_default",
+      "passed": true,
+      "account_count": 0,
+      "transaction_count": 0,
+      "differences": []
+    }
+  ]
+}
