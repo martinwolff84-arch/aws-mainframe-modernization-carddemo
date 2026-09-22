@@ -1,0 +1,11 @@
+{
+  "case": "missing_account",
+  "upstream_commit": "59cc6c2fd7ebd7ef7925cad552a01a4b8b6e4d5e",
+  "status": "error",
+  "error_kind": "MISSING_ACCOUNT",
+  "return_code": 99,
+  "stdout": "START OF EXECUTION OF PROGRAM CBACT04C\n0000000000101001000000120000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\nACCOUNT NOT FOUND: 00000000001\nERROR READING ACCOUNT FILE\nFILE STATUS IS: NNNN0023\nABENDING PROGRAM\nREFERENCE ABEND STUB: +0000000999\n",
+  "stderr": "libcob: warning: implicit CLOSE of TRANSACT-FILE ('TRANSACT')\nlibcob: warning: implicit CLOSE of ACCOUNT-FILE ('ACCTFILE')\nlibcob: warning: implicit CLOSE of DISCGRP-FILE ('DISCGRP')\nlibcob: warning: implicit CLOSE of XREF-FILE ('XREFFILE')\nlibcob: warning: implicit CLOSE of TCATBAL-FILE ('TCATBALF')\n",
+  "accounts": null,
+  "transactions": null
+}

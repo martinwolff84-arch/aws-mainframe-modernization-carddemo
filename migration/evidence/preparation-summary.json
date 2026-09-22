@@ -1,0 +1,31 @@
+{
+  "date": "2026-09-22",
+  "upstream_commit": "59cc6c2fd7ebd7ef7925cad552a01a4b8b6e4d5e",
+  "environment": {
+    "os": "macOS ARM64",
+    "python": "3.11.14",
+    "gnucobol": "3.2.0",
+    "indexed_backend": "Berkeley DB",
+    "java": "17.0.18",
+    "pyspark": "3.5.6",
+    "pytest": "8.3.5"
+  },
+  "reference_cases": {
+    "total": 10,
+    "successful_batches": 7,
+    "expected_business_errors": 3
+  },
+  "reference_checks": 12,
+  "acceptance_tool_checks": 15,
+  "combined_checks": 27,
+  "verification_status": "passed locally: 27 checks; Spark smoke passed separately",
+  "spark_environment_smoke": "passed",
+  "target_implemented": false,
+  "target_parity_run": false,
+  "devin_session_run": false,
+  "github_fork_confirmed": false,
+  "github_ci_run": false,
+  "databricks_run": false,
+  "linux_setup_executed": false,
+  "known_original_defect": "Final processed account emits interest transaction but is not flushed at EOF; preserve first, correction separately reviewed."
+}

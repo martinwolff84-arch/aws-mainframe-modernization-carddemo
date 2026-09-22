@@ -1,0 +1,2096 @@
+{
+  "provenance": "All fixtures are synthetic. No Allianz or real customer data.",
+  "upstream_commit": "59cc6c2fd7ebd7ef7925cad552a01a4b8b6e4d5e",
+  "cases": [
+    {
+      "name": "baseline",
+      "description": "Synthetic multi-account baseline; preserves original final-account EOF defect.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0011",
+          "balance": "100.50"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0012",
+          "balance": "100.99"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "02",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000003",
+          "type": "01",
+          "category": "0010",
+          "balance": "1000.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0011",
+          "balance": "-100.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0011",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000006",
+          "type": "01",
+          "category": "0010",
+          "balance": "10000.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "transaction_amounts": [
+          "12.00",
+          "1.00",
+          "1.00",
+          "18.00",
+          "24.00",
+          "0.00",
+          "-1.00",
+          "0.00",
+          "0.00",
+          "100.00"
+        ],
+        "balances": [
+          "1014.00",
+          "2042.00",
+          "500.00",
+          "99.00",
+          "50.00",
+          "900.00",
+          "700.00"
+        ],
+        "cycle_credit": [
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "8.00",
+          "7.00"
+        ],
+        "cycle_debit": [
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "9.00",
+          "6.00"
+        ]
+      }
+    },
+    {
+      "name": "empty",
+      "description": "No category records means no transactions or account changes.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "transaction_amounts": [],
+        "balances": [
+          "1000.00",
+          "2000.00",
+          "500.00",
+          "100.00",
+          "50.00",
+          "900.00",
+          "700.00"
+        ],
+        "cycle_credit": [
+          "10.00",
+          "10.00",
+          "10.00",
+          "10.00",
+          "10.00",
+          "8.00",
+          "7.00"
+        ],
+        "cycle_debit": [
+          "20.00",
+          "20.00",
+          "20.00",
+          "20.00",
+          "20.00",
+          "9.00",
+          "6.00"
+        ]
+      }
+    },
+    {
+      "name": "single_account_eof",
+      "description": "Only one processed account: transaction exists but original never rewrites that account.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "transaction_amounts": [
+          "12.00"
+        ],
+        "balances": [
+          "1000.00",
+          "2000.00",
+          "500.00",
+          "100.00",
+          "50.00",
+          "900.00",
+          "700.00"
+        ],
+        "cycle_credit": [
+          "10.00",
+          "10.00",
+          "10.00",
+          "10.00",
+          "10.00",
+          "8.00",
+          "7.00"
+        ],
+        "cycle_debit": [
+          "20.00",
+          "20.00",
+          "20.00",
+          "20.00",
+          "20.00",
+          "9.00",
+          "6.00"
+        ]
+      }
+    },
+    {
+      "name": "negative_rate",
+      "description": "Signed rate and signed balance; truncation is toward zero.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "100.50"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0011",
+          "balance": "-100.50"
+        },
+        {
+          "account_id": "00000000006",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "-12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "-12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "transaction_amounts": [
+          "-1.00",
+          "1.00",
+          "0.00"
+        ],
+        "balances": [
+          "1000.00",
+          "2000.00",
+          "500.00",
+          "100.00",
+          "50.00",
+          "900.00",
+          "700.00"
+        ],
+        "cycle_credit": [
+          "0.00",
+          "10.00",
+          "10.00",
+          "10.00",
+          "10.00",
+          "8.00",
+          "7.00"
+        ],
+        "cycle_debit": [
+          "0.00",
+          "20.00",
+          "20.00",
+          "20.00",
+          "20.00",
+          "9.00",
+          "6.00"
+        ]
+      }
+    },
+    {
+      "name": "fractional_rate",
+      "description": "Decimal annual percentage rate, with positive and negative truncation.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "12345.67"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0011",
+          "balance": "-12345.67"
+        },
+        {
+          "account_id": "00000000006",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "9.99"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "9.99"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "transaction_amounts": [
+          "102.77",
+          "-102.77",
+          "0.00"
+        ],
+        "balances": [
+          "1000.00",
+          "2000.00",
+          "500.00",
+          "100.00",
+          "50.00",
+          "900.00",
+          "700.00"
+        ],
+        "cycle_credit": [
+          "0.00",
+          "10.00",
+          "10.00",
+          "10.00",
+          "10.00",
+          "8.00",
+          "7.00"
+        ],
+        "cycle_debit": [
+          "0.00",
+          "20.00",
+          "20.00",
+          "20.00",
+          "20.00",
+          "9.00",
+          "6.00"
+        ]
+      }
+    },
+    {
+      "name": "inactive_account",
+      "description": "Original has no active-status filter: preserve this behavior.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "N"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0011",
+          "balance": "100.50"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0012",
+          "balance": "100.99"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "02",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000003",
+          "type": "01",
+          "category": "0010",
+          "balance": "1000.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0011",
+          "balance": "-100.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0011",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000006",
+          "type": "01",
+          "category": "0010",
+          "balance": "10000.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "transaction_amounts": [
+          "12.00",
+          "1.00",
+          "1.00",
+          "18.00",
+          "24.00",
+          "0.00",
+          "-1.00",
+          "0.00",
+          "0.00",
+          "100.00"
+        ],
+        "balances": [
+          "1014.00",
+          "2042.00",
+          "500.00",
+          "99.00",
+          "50.00",
+          "900.00",
+          "700.00"
+        ],
+        "cycle_credit": [
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "8.00",
+          "7.00"
+        ],
+        "cycle_debit": [
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "9.00",
+          "6.00"
+        ]
+      }
+    },
+    {
+      "name": "input_order",
+      "description": "Indexed input determines key order, not supplied fixture row order.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000006",
+          "type": "01",
+          "category": "0010",
+          "balance": "10000.00"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0011",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0011",
+          "balance": "-100.50"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.00"
+        },
+        {
+          "account_id": "00000000003",
+          "type": "01",
+          "category": "0010",
+          "balance": "1000.00"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "02",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0012",
+          "balance": "100.99"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0011",
+          "balance": "100.50"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "12.00"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "transaction_amounts": [
+          "12.00",
+          "1.00",
+          "1.00",
+          "18.00",
+          "24.00",
+          "0.00",
+          "-1.00",
+          "0.00",
+          "0.00",
+          "100.00"
+        ],
+        "balances": [
+          "1014.00",
+          "2042.00",
+          "500.00",
+          "99.00",
+          "50.00",
+          "900.00",
+          "700.00"
+        ],
+        "cycle_credit": [
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "8.00",
+          "7.00"
+        ],
+        "cycle_debit": [
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "9.00",
+          "6.00"
+        ]
+      }
+    },
+    {
+      "name": "missing_account",
+      "description": "Missing account aborts before any rate-based guard.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0011",
+          "balance": "100.50"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0012",
+          "balance": "100.99"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "02",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000003",
+          "type": "01",
+          "category": "0010",
+          "balance": "1000.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0011",
+          "balance": "-100.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0011",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000006",
+          "type": "01",
+          "category": "0010",
+          "balance": "10000.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "error",
+        "message": "ERROR READING ACCOUNT FILE"
+      }
+    },
+    {
+      "name": "missing_xref",
+      "description": "Missing cross-reference aborts, rather than silently dropping a category.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0011",
+          "balance": "100.50"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0012",
+          "balance": "100.99"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "02",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000003",
+          "type": "01",
+          "category": "0010",
+          "balance": "1000.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0011",
+          "balance": "-100.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0011",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000006",
+          "type": "01",
+          "category": "0010",
+          "balance": "10000.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "01",
+          "category": "0010",
+          "rate": "18.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "error",
+        "message": "ERROR READING XREF FILE"
+      }
+    },
+    {
+      "name": "missing_default",
+      "description": "Missing account-specific and matching DEFAULT rates aborts.",
+      "batch_date": "2026092200",
+      "accounts": [
+        {
+          "account_id": "00000000001",
+          "group": "STANDARD",
+          "current_balance": "1000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000002",
+          "group": "GROUPMISS",
+          "current_balance": "2000.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000003",
+          "group": "ZERO",
+          "current_balance": "500.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000004",
+          "group": "STANDARD",
+          "current_balance": "100.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000005",
+          "group": "STANDARD",
+          "current_balance": "50.00",
+          "cycle_credit": "10.00",
+          "cycle_debit": "20.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000006",
+          "group": "STANDARD",
+          "current_balance": "900.00",
+          "cycle_credit": "8.00",
+          "cycle_debit": "9.00",
+          "active": "Y"
+        },
+        {
+          "account_id": "00000000007",
+          "group": "STANDARD",
+          "current_balance": "700.00",
+          "cycle_credit": "7.00",
+          "cycle_debit": "6.00",
+          "active": "Y"
+        }
+      ],
+      "xrefs": [
+        {
+          "account_id": "00000000001",
+          "card_number": "4444000000000001",
+          "customer_id": "000000001"
+        },
+        {
+          "account_id": "00000000002",
+          "card_number": "4444000000000002",
+          "customer_id": "000000002"
+        },
+        {
+          "account_id": "00000000003",
+          "card_number": "4444000000000003",
+          "customer_id": "000000003"
+        },
+        {
+          "account_id": "00000000004",
+          "card_number": "4444000000000004",
+          "customer_id": "000000004"
+        },
+        {
+          "account_id": "00000000005",
+          "card_number": "4444000000000005",
+          "customer_id": "000000005"
+        },
+        {
+          "account_id": "00000000006",
+          "card_number": "4444000000000006",
+          "customer_id": "000000006"
+        },
+        {
+          "account_id": "00000000007",
+          "card_number": "4444000000000007",
+          "customer_id": "000000007"
+        }
+      ],
+      "categories": [
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0011",
+          "balance": "100.50"
+        },
+        {
+          "account_id": "00000000001",
+          "type": "01",
+          "category": "0012",
+          "balance": "100.99"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "01",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000002",
+          "type": "02",
+          "category": "0010",
+          "balance": "1200.00"
+        },
+        {
+          "account_id": "00000000003",
+          "type": "01",
+          "category": "0010",
+          "balance": "1000.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.00"
+        },
+        {
+          "account_id": "00000000004",
+          "type": "01",
+          "category": "0011",
+          "balance": "-100.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0010",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000005",
+          "type": "01",
+          "category": "0011",
+          "balance": "0.50"
+        },
+        {
+          "account_id": "00000000006",
+          "type": "01",
+          "category": "0010",
+          "balance": "10000.00"
+        }
+      ],
+      "rates": [
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0010",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0011",
+          "rate": "12.00"
+        },
+        {
+          "group": "STANDARD",
+          "type": "01",
+          "category": "0012",
+          "rate": "12.00"
+        },
+        {
+          "group": "DEFAULT",
+          "type": "02",
+          "category": "0010",
+          "rate": "24.00"
+        },
+        {
+          "group": "ZERO",
+          "type": "01",
+          "category": "0010",
+          "rate": "0.00"
+        }
+      ],
+      "expected": {
+        "status": "error",
+        "message": "ERROR READING DEFAULT DISCLOSURE GROUP"
+      }
+    }
+  ]
+}

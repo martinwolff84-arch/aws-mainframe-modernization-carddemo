@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/aws-samples/aws-mainframe-modernization-carddemo",
+  "commit": "59cc6c2fd7ebd7ef7925cad552a01a4b8b6e4d5e",
+  "retrieved": "2026-09-22",
+  "scope": "Unmodified CBACT04C, five copybooks, INTCALC JCL, license and notice",
+  "sha256": {
+    "LICENSE": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+    "NOTICE": "d4290ed64c2edd0fce1d84e3f9dfb2881240fe534def76b8cd29ed6af683e287",
+    "app/cbl/CBACT04C.cbl": "5084bb8b0c9a0f0199f737487ae1863f12e43cabbdc459a62b6b67bedc683cc4",
+    "app/cpy/CVACT01Y.cpy": "81a08bad15af5664326a6f0af3650f570821c4857ffdec3a6a39f91f07dca728",
+    "app/cpy/CVACT03Y.cpy": "ffc6079e09b28739e154bf6c1e1c36d408209faa91f6cf7008078dc596a1c370",
+    "app/cpy/CVTRA01Y.cpy": "50637f13692c89b17a2fc60d249dc54e9eb3569d933afca3cdcf65b491a9d5ba",
+    "app/cpy/CVTRA02Y.cpy": "7828fae489c59944b4310e223028a8d3a525ccf4ead113c062bcaff04b52bf9c",
+    "app/cpy/CVTRA05Y.cpy": "d7bde0e78ff608497087b9909c889ed39e347269f964bda767b92b547fbb5fec",
+    "app/jcl/INTCALC.jcl": "61afa664a807558e58213641d9f3317ab3b354a350c4c1536a630897d194d275"
+  }
+}

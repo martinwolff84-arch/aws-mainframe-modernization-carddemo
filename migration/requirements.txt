@@ -1,0 +1,7 @@
+pyspark==3.5.6
+py4j==0.10.9.7
+pytest==8.3.5
+PyYAML==6.0.2
+iniconfig==2.3.0
+packaging==26.3
+pluggy==1.6.0

@@ -1,0 +1,35 @@
+{
+  "description": "Frozen preparation acceptance baseline. Review this manifest itself against demo-baseline; hashes are not an anti-tampering guarantee.",
+  "cases": [
+    "baseline",
+    "empty",
+    "single_account_eof",
+    "negative_rate",
+    "fractional_rate",
+    "inactive_account",
+    "input_order",
+    "missing_account",
+    "missing_xref",
+    "missing_default"
+  ],
+  "sha256": {
+    "fixtures/cases.json": "8ffdc9b84373afd7a0c366163fc77072040b1e89068aa3d7701eefbc339520e1",
+    "reference/run_reference.py": "205d4282e07917100d3c9f1a5727d88198c1cdd96f94dcea5ebbe673f00b34d3",
+    "reference/driver.cbl": "d49676b52953869287fda7ef8c662bfaf9dcd20f66a76de701b7395b9d2a0bb8",
+    "reference/abend.cbl": "5d9a3f86103934e400167c08c6ca0e185b541d4f499b9b5ad69fa95575c800cd",
+    "tests/test_reference.py": "f07b0d7a9aa056aaba35a55c695ebf9f58fe63e023118db8981f66cc9bf57633",
+    "tests/test_comparison.py": "73d5c99510f7b6073868488dc4edebd681053c950dc7b7fd7aa2406164e434b7",
+    "scripts/compare_target.py": "66d48fe309ba5d9ea2a323c567dc240836e8350e0fe936dc9069796b9edae6fa",
+    "scripts/check_source.py": "cf59cd737d89f896ad10d3a9a331dbdd67011033f5281239dce438ec375d0df8",
+    "evidence/reference/baseline.json": "b08373e2071320b6f28b5eaf630b5ab104b426b9db9f825766d185b64a623bfa",
+    "evidence/reference/empty.json": "83527b02e18f730f6eafb1b3d195f6b5b5a9f967480c518d7264196dc7e44d94",
+    "evidence/reference/fractional_rate.json": "7e6f83a00d07b39d7f7d3c2cec6c14b12b9b9976ee450fa9456011b88423bc87",
+    "evidence/reference/inactive_account.json": "d316d8fa1e7d4e7f2288e34790105c9d289da65401f41339a05416d3cac03213",
+    "evidence/reference/input_order.json": "09035903b12cfeb11cd52ed8a99b852c6b31b9aac76ab598a8d9568e015b09dc",
+    "evidence/reference/missing_account.json": "97735dc09753911339a356f4718d815c028ee393a85d64dec4f3deee8cc1c6ad",
+    "evidence/reference/missing_default.json": "cc60eb7fcaaa2f943c0cbd81ab1188e01739495fd778a175663b5565ce20291e",
+    "evidence/reference/missing_xref.json": "d9fbcb1d9883a03c0ac000f8138bdd9da8a260f7025dfec55f3bad34a08758f9",
+    "evidence/reference/negative_rate.json": "764b47170cd21c41fc1306879c47732e48e47adb44e6fcaddace5d315d3877a0",
+    "evidence/reference/single_account_eof.json": "6394b0f7699d4363b028b325ad8c8383d05373c41ecaa42c0462a30d5d66bfde"
+  }
+}
