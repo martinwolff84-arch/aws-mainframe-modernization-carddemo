@@ -36,14 +36,17 @@ Amounts are re-materialized as `interest_cents × 0.01` cast to `decimal(11,2)`
 ### Shared vs entry-point validation
 
 `validate_inputs(frames)` runs on the four DataFrames and is shared by every
-entry point: `validate_shapes` enforces identifier shapes and S9 picture ranges
-with Spark filters (`MALFORMED_INPUT` / `UNSUPPORTED_RANGE`), then uniqueness
-checks run as `groupBy`/`count`. `compute` additionally raises the classified
-business errors and the interest/account-total overflow checks. Only the local
-CLI path additionally parses JSON, pads identifiers and seeds defaults
-(`frames_from_case`); the Databricks entry point reads tables and relies on the
-shared checks — which is why shape/range validation is DataFrame-level, not
-only Python-side normalisation.
+entry point: `validate_shapes` enforces identifier shapes, nullability (null
+anywhere in a checked column is `MALFORMED_INPUT`), two-decimal scale and S9
+picture ranges with Spark filters (`MALFORMED_INPUT` / `UNSUPPORTED_RANGE`),
+then uniqueness checks run as `groupBy`/`count`. `compute` additionally raises
+the classified business errors and the interest/account-total overflow checks
+(both the per-category `interest_cents` bound and the per-account
+`total_cents` S9(9)V99 bound). Only the local CLI path additionally parses
+JSON, pads identifiers and seeds defaults (`frames_from_case`); missing
+required JSON fields are `MALFORMED_INPUT`, not a crash. The Databricks entry
+point reads tables and relies on the shared checks — which is why shape/range
+validation is DataFrame-level, not only Python-side normalisation.
 
 **Technical errors** (`InputValidationError`, CLI exit 3) — invalid input
 shapes the source could never see through its record layouts:

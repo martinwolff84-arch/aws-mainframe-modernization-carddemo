@@ -113,6 +113,8 @@ def _decimal(raw, field, integer_digits):
         value = Decimal(str(raw))
     except Exception as exc:
         raise InputValidationError("MALFORMED_INPUT", f"{field} is not numeric: {raw!r}") from exc
+    if not value.is_finite():
+        raise InputValidationError("MALFORMED_INPUT", f"{field} is not numeric: {raw!r}")
     if value.is_nan():
         raise InputValidationError("MALFORMED_INPUT", f"{field} is not numeric: {raw!r}")
     if value.as_tuple().exponent < -2:
@@ -158,6 +160,13 @@ def _normalize_customer_id(raw):
     return value.zfill(9)
 
 
+def _require(raw, field, record_label):
+    if field not in raw:
+        raise InputValidationError(
+            "MALFORMED_INPUT", f"{record_label} record is missing {field!r}")
+    return raw[field]
+
+
 def frames_from_case(spark, case):
     """Build the four input DataFrames from a fixture case dict.
 
@@ -173,9 +182,10 @@ def frames_from_case(spark, case):
     accounts = []
     for raw in case.get("accounts") or []:
         accounts.append({
-            "account_id": _normalize_account_id(raw["account_id"]),
-            "group": _normalize_group(raw["group"]),
-            "current_balance": _decimal(raw["current_balance"], "current_balance", 10),
+            "account_id": _normalize_account_id(_require(raw, "account_id", "accounts")),
+            "group": _normalize_group(_require(raw, "group", "accounts")),
+            "current_balance": _decimal(_require(raw, "current_balance", "accounts"),
+                                        "current_balance", 10),
             "cycle_credit": _decimal(raw.get("cycle_credit", "0"), "cycle_credit", 10),
             "cycle_debit": _decimal(raw.get("cycle_debit", "0"), "cycle_debit", 10),
             "active": str(raw.get("active", ACCOUNT_DEFAULTS["active"])),
@@ -192,32 +202,33 @@ def frames_from_case(spark, case):
 
     xrefs = []
     for raw in case.get("xrefs") or []:
-        card_number = str(raw["card_number"])
+        card_number = str(_require(raw, "card_number", "xrefs"))
         if len(card_number) != 16:
             raise InputValidationError("MALFORMED_INPUT",
                                        f"card_number is not exactly 16 characters: {card_number!r}")
         xrefs.append({
             "card_number": card_number,
-            "customer_id": _normalize_customer_id(raw["customer_id"]),
-            "account_id": _normalize_account_id(raw["account_id"]),
+            "customer_id": _normalize_customer_id(_require(raw, "customer_id", "xrefs")),
+            "account_id": _normalize_account_id(_require(raw, "account_id", "xrefs")),
         })
 
     categories = []
     for raw in case.get("categories") or []:
         categories.append({
-            "account_id": _normalize_account_id(raw["account_id"]),
-            "type": _normalize_type(raw["type"]),
-            "category": _normalize_category(raw["category"]),
-            "balance": _decimal(raw["balance"], "category balance", 9),
+            "account_id": _normalize_account_id(_require(raw, "account_id", "categories")),
+            "type": _normalize_type(_require(raw, "type", "categories")),
+            "category": _normalize_category(_require(raw, "category", "categories")),
+            "balance": _decimal(_require(raw, "balance", "categories"),
+                                "category balance", 9),
         })
 
     rates = []
     for raw in case.get("rates") or []:
         rates.append({
-            "group": _normalize_group(raw["group"]),
-            "type": _normalize_type(raw["type"]),
-            "category": _normalize_category(raw["category"]),
-            "rate": _decimal(raw["rate"], "rate", 4),
+            "group": _normalize_group(_require(raw, "group", "rates")),
+            "type": _normalize_type(_require(raw, "type", "rates")),
+            "category": _normalize_category(_require(raw, "category", "rates")),
+            "rate": _decimal(_require(raw, "rate", "rates"), "rate", 4),
         })
 
     return {
@@ -245,13 +256,26 @@ def _reject_offenders(frame, condition, kind, label):
 
 
 def _shape(frame, column, pattern, label):
-    _reject_offenders(frame, ~F.col(column).rlike(pattern),
+    # Null is a shape violation: SQL three-valued logic would let it through.
+    _reject_offenders(frame,
+                      F.col(column).isNull() | ~F.col(column).rlike(pattern),
                       "MALFORMED_INPUT", f"{label} violates shape {pattern}")
 
 
 def _range(frame, column, limit, label):
-    _reject_offenders(frame, F.abs(F.col(column)) >= F.lit(Decimal(limit)),
+    _reject_offenders(frame,
+                      F.col(column).isNull()
+                      | (F.abs(F.col(column)) >= F.lit(Decimal(limit))),
                       "UNSUPPORTED_RANGE", f"{label} exceeds capacity {limit}")
+
+
+def _scale(frame, column, label):
+    # Two decimal places max; a wider schema (e.g. DecimalType(11,3)) can carry
+    # fractional cents that COBOL S9(n)V99 fields could never hold.
+    hundred = F.col(column) * F.lit(100)
+    _reject_offenders(frame,
+                      F.col(column).isNull() | (hundred != F.floor(hundred)),
+                      "MALFORMED_INPUT", f"{label} has more than 2 decimals")
 
 
 def validate_shapes(frames):
@@ -267,6 +291,7 @@ def validate_shapes(frames):
     _shape(accounts, "group", r"^.{1,10}$", "accounts.group")
     for column in ("current_balance", "cycle_credit", "cycle_debit",
                    "credit_limit", "cash_credit_limit"):
+        _scale(accounts, column, f"accounts.{column}")
         _range(accounts, column, "10000000000", f"accounts.{column}")
     _shape(xrefs, "card_number", r"^.{16}$", "xrefs.card_number")
     _shape(xrefs, "customer_id", r"^\d{9}$", "xrefs.customer_id")
@@ -274,10 +299,12 @@ def validate_shapes(frames):
     _shape(categories, "account_id", r"^\d{11}$", "categories.account_id")
     _shape(categories, "type", r"^.{2}$", "categories.type")
     _shape(categories, "category", r"^\d{4}$", "categories.category")
+    _scale(categories, "balance", "categories.balance")
     _range(categories, "balance", "1000000000", "categories.balance")
     _shape(rates, "group", r"^.{1,10}$", "rates.group")
     _shape(rates, "type", r"^.{2}$", "rates.type")
     _shape(rates, "category", r"^\d{4}$", "rates.category")
+    _scale(rates, "rate", "rates.rate")
     _range(rates, "rate", "10000", "rates.rate")
 
 
@@ -389,6 +416,11 @@ def compute(frames, batch_date, as_of=REFERENCE_CLOCK):
 
     totals = priced.groupBy("account_id").agg(
         F.sum("interest_cents").alias("total_cents"))
+    # WS-TOTAL-INT is S9(9)V99 in the source: the per-account sum must fit too.
+    max_total = totals.agg(F.max(F.abs("total_cents")).alias("m")).first()["m"]
+    if max_total is not None and max_total >= MAX_INTEREST_CENTS:
+        raise InputValidationError(
+            "UNSUPPORTED_RANGE", "account interest total exceeds S9(9)V99 capacity")
 
     # The original rewrites the previous account when the next account's first
     # row is read; the last processed account is never rewritten (preserved EOF

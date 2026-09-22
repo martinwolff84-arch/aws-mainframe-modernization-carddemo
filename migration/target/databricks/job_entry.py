@@ -43,6 +43,18 @@ from target.interest import (
 )
 
 RUN_ID_PATTERN = re.compile(r"^[A-Za-z0-9_.-]{1,64}$")
+TABLE_NAME_PATTERN = re.compile(r"^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+){0,2}$")
+TABLE_PARAMS = ("accounts_table", "xrefs_table", "categories_table",
+                "rates_table", "accounts_out_table", "transactions_out_table")
+REQUIRED_PARAMS = TABLE_PARAMS + ("batch_date", "run_id")
+
+
+def qualified_table(name, param):
+    """Validate a table identifier and return it with each part backticked."""
+    if not TABLE_NAME_PATTERN.fullmatch(str(name or "")):
+        raise InputValidationError(
+            "MALFORMED_INPUT", f"invalid {param}: {name!r}")
+    return ".".join(f"`{part}`" for part in str(name).split("."))
 
 
 def run_time_clock():
@@ -51,15 +63,16 @@ def run_time_clock():
 
 
 def run_job(spark, params):
-    # run_id is interpolated into a DELETE statement; bound its character set.
+    # run_id and table names are interpolated into SQL; bound their shapes.
     if not RUN_ID_PATTERN.fullmatch(str(params["run_id"])):
         raise InputValidationError(
             "MALFORMED_INPUT", f"invalid run_id: {params['run_id']!r}")
+    tables = {name: qualified_table(params[name], name) for name in TABLE_PARAMS}
     frames = {
-        "accounts": spark.table(params["accounts_table"]),
-        "xrefs": spark.table(params["xrefs_table"]),
-        "categories": spark.table(params["categories_table"]),
-        "rates": spark.table(params["rates_table"]),
+        "accounts": spark.table(tables["accounts_table"]),
+        "xrefs": spark.table(tables["xrefs_table"]),
+        "categories": spark.table(tables["categories_table"]),
+        "rates": spark.table(tables["rates_table"]),
     }
     validate_inputs(frames)
     accounts_out, transactions_out = compute(
@@ -67,20 +80,20 @@ def run_job(spark, params):
 
     # Step 1: idempotent append of this run's transactions.
     spark.sql(
-        f"DELETE FROM {params['transactions_out_table']} "
+        f"DELETE FROM {tables['transactions_out_table']} "
         f"WHERE run_id = '{params['run_id']}'")
     (transactions_out
         .withColumn("run_id", F.lit(params["run_id"]))
         .withColumn("batch_date", F.lit(params["batch_date"]))
         .write.format("delta").mode("append")
-        .saveAsTable(params["transactions_out_table"]))
+        .saveAsTable(tables["transactions_out_table"]))
 
     # Step 2: full snapshot overwrite of the accounts output. If the job dies
     # between the steps, retrying with the same run_id restores consistency:
     # the DELETE above removes the earlier partial append and the overwrite
     # replaces any prior snapshot.
     accounts_out.write.format("delta").mode("overwrite") \
-        .saveAsTable(params["accounts_out_table"])
+        .saveAsTable(tables["accounts_out_table"])
 
     return {"status": "success", "run_id": params["run_id"],
             "as_of": params["as_of"], "batch_date": params["batch_date"],
@@ -90,9 +103,7 @@ def run_job(spark, params):
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ("accounts_table", "xrefs_table", "categories_table",
-                 "rates_table", "accounts_out_table", "transactions_out_table",
-                 "batch_date", "run_id"):
+    for name in REQUIRED_PARAMS:
         parser.add_argument(f"--{name.replace('_', '-')}", required=True)
     parser.add_argument("--as-of", default=None)
     args = parser.parse_args(argv)
@@ -102,26 +113,42 @@ def parse_args(argv=None):
 
 
 def _widgets(spark):
-    """Read job parameters from dbutils widgets when available."""
+    """Read job parameters from dbutils widgets when no argv is present.
+
+    Widgets are only READ, never created: calling widgets.text() would shadow
+    missing parameters with empty strings and hide a misconfigured job. A
+    widget that does not exist raises on .get() and is treated as absent.
+    """
     try:
         from pyspark.dbutils import DBUtils  # type: ignore
         dbutils = DBUtils(spark)
     except Exception:  # noqa: BLE001 - dbutils unavailable outside Databricks
         return None
-    names = ("accounts_table", "xrefs_table", "categories_table", "rates_table",
-             "accounts_out_table", "transactions_out_table", "batch_date",
-             "run_id", "as_of")
-    for name in names:
-        dbutils.widgets.text(name, "")
-    params = {name: dbutils.widgets.get(name) for name in names}
+    params = {}
+    for name in REQUIRED_PARAMS + ("as_of",):
+        try:
+            params[name] = dbutils.widgets.get(name) or None
+        except Exception:  # noqa: BLE001 - widget not defined for this job
+            params[name] = None
+    missing = [name for name in REQUIRED_PARAMS if not params[name]]
+    if missing:
+        raise InputValidationError(
+            "MALFORMED_INPUT",
+            f"missing required widget parameter(s): {', '.join(missing)}")
     params["as_of"] = params["as_of"] or run_time_clock()
     return params
 
 
 def main():
+    import sys
+
     from pyspark.sql import SparkSession
     spark = SparkSession.builder.getOrCreate()
-    params = _widgets(spark) or parse_args()
+    params = parse_args() if len(sys.argv) > 1 else _widgets(spark)
+    if params is None:
+        raise InputValidationError(
+            "MALFORMED_INPUT",
+            "no parameters: pass CLI arguments or dbutils widgets")
     return run_job(spark, params)
 
 

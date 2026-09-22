@@ -22,7 +22,7 @@ execution on Linux, captured 22 September 2026.
 | `target-baseline.json` | `python target/run_job.py --case baseline --fixtures fixtures/cases.json --output evidence/target/target-baseline.json --explain` (exit 0; accounts/transactions equal `evidence/reference/baseline.json` exactly) |
 | `target-baseline.json.plan.txt` | `--explain` output: formatted Spark plans for `accounts_out` and `transactions_out` |
 | `target-baseline-rerun.json` | second identical `run_job.py` invocation |
-| `pytest-full.txt` | `python -m pytest tests -q` — **67 passed** (27 preexisting + 40 target) |
+| `pytest-full.txt` | `python -m pytest tests -q` — **79 passed** (27 preexisting + 52 target) |
 | `spark-log.txt` | `run_job.py --case baseline --log-level INFO`, stderr filtered to `DAGScheduler`/`ResultStage`/`Job … finished`/`SparkContext` lines (first 200) — evidence the calculation executed on the Spark engine, including shuffle exchanges |
 
 ## Repeatability

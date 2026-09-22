@@ -8,6 +8,14 @@ credential value in `databricks.yml` or `job_entry.py` is real.
 the exact same `validate_inputs` + `compute` from `target/interest.py` used by
 the local CLI, and writes the two output tables.
 
+Parameter resolution: if the job is launched with arguments (`sys.argv`),
+argparse requires every parameter; otherwise dbutils widgets are **read only**
+— missing widgets raise on `.get()` and count as absent, and absent required
+parameters are rejected as `MALFORMED_INPUT` (widgets are never created
+implicitly). `run_id` must match `^[A-Za-z0-9_.-]{1,64}$` and every table name
+must match `^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+){0,2}$` before being interpolated
+(backticked per part) into SQL.
+
 ## Required owner decisions before any run
 
 See `docs/DATABRICKS-HANDOVER.md` for the full checklist. In short, an owner

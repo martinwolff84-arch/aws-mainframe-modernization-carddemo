@@ -395,3 +395,193 @@ def test_cli_success_exit_and_output(tmp_path):
     assert payload["status"] == "success" and payload["error_kind"] is None
     assert payload["accounts"] and payload["transactions"]
     assert not (tmp_path / "ok.json.tmp").exists()
+
+
+# --- review hardening: shared validation and parameter handling --------------
+
+def test_null_balance_and_null_account_id_rejected(spark):
+    """Nulls must not slip through SQL three-valued logic."""
+    frames = frames_from_case(spark, load_case("baseline"))
+    nullable = T.StructType([
+        T.StructField("account_id", T.StringType(), True),
+        T.StructField("type", T.StringType(), True),
+        T.StructField("category", T.StringType(), True),
+        T.StructField("balance", T.DecimalType(11, 2), True)])
+    frames["categories"] = spark.createDataFrame(
+        [("00000000001", "01", "0010", None)], nullable)
+    with pytest.raises(InputValidationError) as exc:
+        validate_inputs(frames)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+    frames = frames_from_case(spark, load_case("baseline"))
+    nullable_accounts = T.StructType([
+        T.StructField("account_id", T.StringType(), True),
+        T.StructField("group", T.StringType(), True),
+        T.StructField("current_balance", T.DecimalType(12, 2), True),
+        T.StructField("cycle_credit", T.DecimalType(12, 2), True),
+        T.StructField("cycle_debit", T.DecimalType(12, 2), True),
+        T.StructField("active", T.StringType(), True),
+        T.StructField("credit_limit", T.DecimalType(12, 2), True),
+        T.StructField("cash_credit_limit", T.DecimalType(12, 2), True),
+        T.StructField("open_date", T.StringType(), True),
+        T.StructField("expiration_date", T.StringType(), True),
+        T.StructField("reissue_date", T.StringType(), True),
+        T.StructField("zip", T.StringType(), True)])
+    row = next(iter(frames["accounts"].limit(1).collect())).asDict()
+    row["account_id"] = None
+    frames["accounts"] = spark.createDataFrame([tuple(row.values())],
+                                               nullable_accounts)
+    with pytest.raises(InputValidationError) as exc:
+        validate_inputs(frames)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_fractional_cent_scale_rejected_on_dataframes(spark):
+    """A DecimalType(11,3) column can carry 30.035; COBOL V99 cannot."""
+    frames = frames_from_case(spark, load_case("baseline"))
+    wide = T.StructType([T.StructField("account_id", T.StringType()),
+                         T.StructField("type", T.StringType()),
+                         T.StructField("category", T.StringType()),
+                         T.StructField("balance", T.DecimalType(11, 3))])
+    frames["categories"] = spark.createDataFrame(
+        [("00000000001", "01", "0010", Decimal("30.035"))], wide)
+    with pytest.raises(InputValidationError) as exc:
+        validate_inputs(frames)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_infinite_amount_rejected(spark):
+    case = simple_rate_case("Infinity", "12.00")
+    with pytest.raises(InputValidationError) as exc:
+        run_case(spark, case)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_account_total_overflow_rejected(spark):
+    """Each row fits S9(9)V99 but their sum does not."""
+    case = case_with()
+    acct = case["accounts"][0]["account_id"]
+    case["categories"] = [
+        {"account_id": acct, "type": "01", "category": "0010",
+         "balance": "72000000.00"},
+        {"account_id": acct, "type": "01", "category": "0011",
+         "balance": "72000000.00"},
+    ]
+    case["rates"] = [
+        {"group": "STANDARD", "type": "01", "category": "0010", "rate": "9999.99"},
+        {"group": "STANDARD", "type": "01", "category": "0011", "rate": "9999.99"},
+    ]
+    with pytest.raises(InputValidationError) as exc:
+        run_case(spark, case)
+    assert exc.value.kind == "UNSUPPORTED_RANGE"
+
+
+@pytest.mark.parametrize("collection,field", [
+    ("accounts", "group"),
+    ("xrefs", "customer_id"),
+    ("categories", "balance"),
+    ("rates", "rate"),
+])
+def test_missing_required_field_rejected(spark, collection, field):
+    case = load_case("baseline")
+    del case[collection][0][field]
+    with pytest.raises(InputValidationError) as exc:
+        run_case(spark, case)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_cli_missing_field_exits_3(tmp_path):
+    fixture = tmp_path / "bad.json"
+    fixture.write_text(json.dumps({"cases": [{
+        "name": "bad", "batch_date": "2026092200",
+        "accounts": [{"account_id": "00000000001"}],
+        "xrefs": [], "categories": [], "rates": []}]}))
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "target/run_job.py"),
+         "--case", "bad", "--fixtures", str(fixture),
+         "--output", str(tmp_path / "out.json")],
+        cwd=ROOT, capture_output=True, text=True, timeout=300, check=False)
+    assert proc.returncode == 3
+    payload = json.loads((tmp_path / "out.json").read_text())
+    assert payload["error_kind"] == "MALFORMED_INPUT"
+
+
+# --- databricks entry-point parameter handling --------------------------------
+
+def _job_params(**overrides):
+    params = {"accounts_table": "cat.sch.accounts",
+              "xrefs_table": "xrefs", "categories_table": "cats",
+              "rates_table": "rates", "accounts_out_table": "out.a",
+              "transactions_out_table": "out.t",
+              "batch_date": "2026092200", "run_id": "r1", "as_of": "ts"}
+    params.update(overrides)
+    return params
+
+
+def test_qualified_table_validation():
+    from target.databricks import job_entry
+    assert job_entry.qualified_table("cat.sch.tbl", "x") == "`cat`.`sch`.`tbl`"
+    assert job_entry.qualified_table("tbl", "x") == "`tbl`"
+    for bad in ("a;drop", "a.b.c.d", "a b", "", None, "a.`b`"):
+        with pytest.raises(InputValidationError) as exc:
+            job_entry.qualified_table(bad, "x")
+        assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_parse_args_collects_required_params():
+    from target.databricks import job_entry
+    argv = []
+    for name in job_entry.REQUIRED_PARAMS:
+        argv += [f"--{name.replace('_', '-')}", "v"]
+    params = job_entry.parse_args(argv)
+    for name in job_entry.REQUIRED_PARAMS:
+        assert params[name] == "v"
+    assert params["as_of"]
+
+
+def test_widgets_and_main_param_resolution(monkeypatch, spark):
+    import types
+
+    from target.databricks import job_entry
+
+    class FakeWidgets:
+        def __init__(self, values):
+            self.values = values
+
+        def get(self, name):
+            if name not in self.values:
+                raise KeyError(name)
+            return self.values[name]
+
+    def fake_dbutils(values):
+        module = types.ModuleType("pyspark.dbutils")
+
+        class FakeDBUtils:
+            def __init__(self, _spark):
+                self.widgets = FakeWidgets(values)
+
+        module.DBUtils = FakeDBUtils
+        monkeypatch.setitem(sys.modules, "pyspark.dbutils", module)
+
+    values = {name: "v" for name in job_entry.REQUIRED_PARAMS}
+    values["as_of"] = "2026-09-22-12.00.00.000000"
+    fake_dbutils(values)
+    params = job_entry._widgets(spark)
+    assert params["run_id"] == "v"
+
+    # Missing widget -> absent -> MALFORMED_INPUT, never silently empty.
+    del values["run_id"]
+    fake_dbutils(values)
+    with pytest.raises(InputValidationError) as exc:
+        job_entry._widgets(spark)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+    # argv present -> parse_args path, widgets never consulted.
+    monkeypatch.setattr(sys, "argv", ["job", "--flag"])
+    monkeypatch.setattr(job_entry, "parse_args", lambda: {"from": "cli"})
+    monkeypatch.setattr(job_entry, "run_job", lambda s, p: p)
+    monkeypatch.setattr(job_entry, "_widgets",
+                        lambda s: pytest.fail("widgets must not be used"))
+    # SparkSession.builder.getOrCreate() reuses the fixture's session.
+    result = job_entry.main()
+    assert result == {"from": "cli"}
