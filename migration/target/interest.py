@@ -207,8 +207,10 @@ def frames_from_case(spark, case):
             "group": _normalize_group(_text(raw, "group", "accounts")),
             "current_balance": _decimal(_require(raw, "current_balance", "accounts"),
                                         "current_balance", 10),
-            "cycle_credit": _decimal(raw.get("cycle_credit", "0"), "cycle_credit", 10),
-            "cycle_debit": _decimal(raw.get("cycle_debit", "0"), "cycle_debit", 10),
+            "cycle_credit": _decimal(_require(raw, "cycle_credit", "accounts"),
+                                     "cycle_credit", 10),
+            "cycle_debit": _decimal(_require(raw, "cycle_debit", "accounts"),
+                                    "cycle_debit", 10),
             "active": _text(raw, "active", "accounts", ACCOUNT_DEFAULTS["active"]),
             "credit_limit": _decimal(raw.get("credit_limit", ACCOUNT_DEFAULTS["credit_limit"]),
                                      "credit_limit", 10),
@@ -236,8 +238,11 @@ def frames_from_case(spark, case):
             "account_id": _normalize_account_id(_text(raw, "account_id", "xrefs")),
         })
 
+    if not isinstance(case.get("categories"), list):
+        raise InputValidationError(
+            "MALFORMED_INPUT", "case is missing 'categories'")
     categories = []
-    for raw in case.get("categories") or []:
+    for raw in case["categories"]:
         categories.append({
             "account_id": _normalize_account_id(_text(raw, "account_id", "categories")),
             "type": _normalize_type(_text(raw, "type", "categories")),
@@ -445,11 +450,17 @@ def compute(frames, batch_date, as_of=REFERENCE_CLOCK):
 
     totals = priced.groupBy("account_id").agg(
         F.sum("interest_cents").alias("total_cents"))
-    # WS-TOTAL-INT is S9(9)V99 in the source: the per-account sum must fit too.
-    max_total = totals.agg(F.max(F.abs("total_cents")).alias("m")).first()["m"]
-    if max_total is not None and max_total >= MAX_INTEREST_CENTS:
+    # WS-TOTAL-INT is S9(9)V99 and COBOL accumulates it in key order: every
+    # running prefix must fit, not only the final total.
+    running = Window.partitionBy("account_id").orderBy("type", "category") \
+        .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+    max_running = priced.withColumn(
+        "running_cents", F.sum("interest_cents").over(running)) \
+        .agg(F.max(F.abs("running_cents")).alias("m")).first()["m"]
+    if max_running is not None and max_running >= MAX_INTEREST_CENTS:
         raise InputValidationError(
-            "UNSUPPORTED_RANGE", "account interest total exceeds S9(9)V99 capacity")
+            "UNSUPPORTED_RANGE",
+            "running account interest total exceeds S9(9)V99 capacity")
 
     # The original rewrites the previous account when the next account's first
     # row is read; the last processed account is never rewritten (preserved EOF

@@ -13,6 +13,10 @@ variables:
     description: "PLACEHOLDER: approved schema name (owner decision)"
   cluster_id:
     description: "PLACEHOLDER: approved cluster/compute identifier (owner decision)"
+  workspace_url:
+    description: "PLACEHOLDER: approved workspace URL (owner decision)"
+  batch_date:
+    description: "10-char CCYYMMDDHH batch date, owner-supplied per run"
   run_id_prefix:
     description: "PLACEHOLDER: run-id naming convention (owner decision)"
     default: "cbact04c"

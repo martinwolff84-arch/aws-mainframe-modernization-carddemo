@@ -41,10 +41,18 @@ anywhere in a checked column is `MALFORMED_INPUT`), two-decimal scale and S9
 picture ranges with Spark filters (`MALFORMED_INPUT` / `UNSUPPORTED_RANGE`),
 then uniqueness checks run as `groupBy`/`count`. `compute` additionally raises
 the classified business errors and the interest/account-total overflow checks
-(both the per-category `interest_cents` bound and the per-account
-`total_cents` S9(9)V99 bound). Only the local CLI path additionally parses
+(both the per-category `interest_cents` bound and the running per-account
+prefix `running_cents` S9(9)V99 bound — COBOL accumulates in key order, so
+every prefix must fit, not only the final total). Only the local CLI path additionally parses
 JSON, pads identifiers and seeds defaults (`frames_from_case`); missing
-required JSON fields are `MALFORMED_INPUT`, not a crash. The Databricks entry
+required JSON fields are `MALFORMED_INPUT`, not a crash. Required fields:
+`batch_date` (falls back to the seeded value), `categories` (must be a list,
+possibly empty), per-record `account_id`/`group`/`current_balance`/
+`cycle_credit`/`cycle_debit`, xref `card_number`/`customer_id`/`account_id`,
+category `account_id`/`type`/`category`/`balance`, rate `group`/`type`/
+`category`/`rate`. Optional account fields keep the reference adapter's seeded
+defaults: `active`, `credit_limit`, `cash_credit_limit`, `open_date`,
+`expiration_date`, `reissue_date`, `zip`. The Databricks entry
 point reads tables and relies on the shared checks — which is why shape/range
 validation is DataFrame-level, not only Python-side normalisation.
 

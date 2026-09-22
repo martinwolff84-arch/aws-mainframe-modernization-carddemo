@@ -6,6 +6,7 @@ DataFrame path and read back via to_canonical. The acceptance harness
 """
 import copy
 import json
+import re
 import subprocess
 import sys
 from decimal import Decimal
@@ -669,3 +670,94 @@ def test_null_or_bad_account_string_fields_rejected(spark, field, value):
     with pytest.raises(InputValidationError) as exc:
         run_case(spark, case)
     assert exc.value.kind == "MALFORMED_INPUT"
+
+
+# --- review round 3: running totals, required fields, bundle vars ------------
+
+def _three_category_case(balances, rate="9999.99"):
+    case = case_with()
+    acct = case["accounts"][0]["account_id"]
+    cats = ["0010", "0011", "0012"][:len(balances)]
+    case["categories"] = [
+        {"account_id": acct, "type": "01", "category": c, "balance": b}
+        for c, b in zip(cats, balances, strict=True)]
+    case["rates"] = [
+        {"group": "STANDARD", "type": "01", "category": c, "rate": rate}
+        for c in cats]
+    return case
+
+
+@pytest.mark.parametrize("sign", ["", "-"])
+def test_running_total_overflow_caught_mid_account(spark, sign):
+    """Prefix sums must fit S9(9)V99 even when the final total would fit:
+    +72M, +72M, -72M has a 1,199,998,800 mid-account running total."""
+    b = f"{sign}72000000.00"
+    inv = "-72000000.00" if sign == "" else "72000000.00"
+    case = _three_category_case([b, b, inv])
+    with pytest.raises(InputValidationError) as exc:
+        run_case(spark, case)
+    assert exc.value.kind == "UNSUPPORTED_RANGE"
+
+
+def test_running_total_within_range_passes(spark):
+    """Alternating signs keep every prefix below the bound: this must succeed."""
+    case = _three_category_case(
+        ["72000000.00", "-72000000.00", "72000000.00"])
+    result = run_case(spark, case)
+    assert len(result["transactions"]) == 3
+
+
+def test_missing_categories_key_rejected(spark):
+    case = load_case("baseline")
+    del case["categories"]
+    with pytest.raises(InputValidationError) as exc:
+        run_case(spark, case)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_null_categories_rejected(spark):
+    case = load_case("baseline")
+    case["categories"] = None
+    with pytest.raises(InputValidationError) as exc:
+        run_case(spark, case)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_empty_categories_valid(spark):
+    case = case_with(categories=[])
+    result = run_case(spark, case)
+    assert result["transactions"] == []
+
+
+def test_missing_cycle_debit_rejected(spark):
+    case = load_case("baseline")
+    del case["accounts"][0]["cycle_debit"]
+    with pytest.raises(InputValidationError) as exc:
+        run_case(spark, case)
+    assert exc.value.kind == "MALFORMED_INPUT"
+
+
+def test_minimal_account_uses_adapter_defaults(spark):
+    case = case_with()
+    case["accounts"] = [{"account_id": "00000000001", "group": "STANDARD",
+                         "current_balance": "100.00", "cycle_credit": "0.00",
+                         "cycle_debit": "0.00"}]
+    result = run_case(spark, case)
+    acct = account(result, "00000000001")
+    assert (acct["active"], acct["credit_limit"], acct["zip"],
+            acct["open_date"]) == ("Y", "10000.00", "12345", "2020-01-01")
+
+
+def test_bundle_variables_all_declared():
+    """Every ${var.NAME} referenced in databricks.yml must be declared."""
+    text = (ROOT / "target/databricks/databricks.yml").read_text()
+    referenced = set(re.findall(r"\$\{var\.([A-Za-z0-9_]+)\}", text))
+    try:
+        import yaml
+        declared = set(yaml.safe_load(text).get("variables", {}).keys())
+    except ImportError:
+        block = text.split("variables:", 1)[1].split("targets:", 1)[0]
+        declared = set(re.findall(r"^  ([A-Za-z0-9_]+):", block, re.MULTILINE))
+    assert referenced, "no variable references found in databricks.yml"
+    assert referenced <= declared, \
+        f"undeclared variables: {sorted(referenced - declared)}"
